@@ -118,10 +118,10 @@ export function AdminConsole({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn text-slate-800 dark:text-slate-200">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in text-slate-800 dark:text-slate-200">
       
       {/* Admin Profile Banner */}
-      <div className="inst-panel rounded-md p-6 mb-6 border border-slate-200 dark:border-slate-800">
+      <div className="academic-card p-6 sm:p-7 mb-6 border border-slate-200 dark:border-slate-800">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300">
@@ -197,50 +197,50 @@ export function AdminConsole({
 
       {/* Real KPI Cards (Calculated directly from actual database state) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="inst-card p-4 rounded-md border-l-4 border-l-blue-600">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+        <div className="academic-card p-5">
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
             {lang === 'kn' ? 'ನೋಂದಾಯಿತ ವಿದ್ಯಾರ್ಥಿಗಳು' : 'Active Students'}
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
+          <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-heading tabular-nums">
             {registeredStudentsCount}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1 font-mono">Enrolled secondary sections</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-mono">Enrolled secondary sections</p>
         </div>
 
-        <div className="inst-card p-4 rounded-md border-l-4 border-l-slate-600">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+        <div className="academic-card p-5">
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
             {lang === 'kn' ? 'ಬೋಧಕ ಸಿಬ್ಬಂದಿ' : 'Faculty Accounts'}
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
+          <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-heading tabular-nums">
             {registeredTeachersCount}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1 font-mono">Verified department faculty</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-mono">Verified department faculty</p>
         </div>
 
-        <div className="inst-card p-4 rounded-md border-l-4 border-l-emerald-600">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+        <div className="academic-card p-5">
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
             {lang === 'kn' ? 'ಪ್ರಕಟಿತ ಸಾಮಗ್ರಿಗಳು' : 'Published Documents'}
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
+          <div className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-heading tabular-nums">
             {approvedResources.length}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1 font-mono">Live in student library</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-mono">Live in student library</p>
         </div>
 
-        <div className="inst-card p-4 rounded-md border-l-4 border-l-amber-600">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+        <div className="academic-card p-5">
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
             {lang === 'kn' ? 'ಅನುಮೋದನೆ ಬಾಕಿ' : 'Pending Approvals'}
           </div>
-          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 font-heading">
+          <div className="text-3xl font-extrabold text-amber-600 dark:text-amber-400 font-heading tabular-nums">
             {pendingResources.length}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1 font-mono">Awaiting verification</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-mono">Awaiting verification</p>
         </div>
       </div>
 
       {/* Tab 1: Approvals Queue */}
       {activeTab === 'approvals' && (
-        <div className="inst-card rounded-md p-5">
+        <div className="academic-card p-6">
           <div className="mb-4 pb-2 border-b border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">
               {lang === 'kn' ? 'ಶಿಕ್ಷಕರು ಸಲ್ಲಿಸಿದ ಸಂಪನ್ಮೂಲಗಳ ಪರಿಶೀಲನಾ ಪಟ್ಟಿ' : 'Curriculum Document Verification Queue'}
@@ -312,8 +312,8 @@ export function AdminConsole({
 
       {/* Reject Modal */}
       {rejectingId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="inst-panel rounded-md p-5 max-w-md w-full border border-slate-300 dark:border-slate-700">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+          <div className="bg-white dark:bg-[#111827] rounded-lg p-6 max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-2xl animate-modal">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-1.5">
               <AlertTriangle className="w-4 h-4 text-red-600" />
               <span>Record Rejection Reason</span>
@@ -348,7 +348,7 @@ export function AdminConsole({
 
       {/* Tab 2: User Accounts */}
       {activeTab === 'users' && (
-        <div className="inst-card rounded-md p-5">
+        <div className="academic-card p-6">
           <div className="mb-4 pb-2 border-b border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">
               {lang === 'kn' ? 'ಬಳಕೆದಾರರ ಖಾತೆಗಳ ಡೈರೆಕ್ಟರಿ' : 'Enrolled User Accounts Directory'}
@@ -415,7 +415,7 @@ export function AdminConsole({
 
       {/* Tab 3: Announcements */}
       {activeTab === 'announcements' && (
-        <div className="inst-card rounded-md p-6 max-w-2xl mx-auto">
+        <div className="academic-card p-6 sm:p-8 max-w-2xl mx-auto">
           <div className="mb-5 pb-2 border-b border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading">
               {lang === 'kn' ? 'ಶಾಲಾ ಪ್ರಕಟಣೆ ಪ್ರಸಾರ ಮಾಡಿ' : 'Broadcast Institutional Notice'}
@@ -502,7 +502,7 @@ export function AdminConsole({
 
       {/* Tab 4: Audit Logs */}
       {activeTab === 'logs' && (
-        <div className="inst-card rounded-md p-5">
+        <div className="academic-card p-6">
           <div className="mb-4 pb-2 border-b border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">
               {lang === 'kn' ? 'ವ್ಯವಸ್ಥೆಯ ಚಟುವಟಿಕೆಗಳ ಆಡಿಟ್ ಲಾಗ್‌ಗಳು' : 'Institutional System Audit and Verification Log'}

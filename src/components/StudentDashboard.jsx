@@ -37,10 +37,10 @@ export function StudentDashboard({
   const approvedCount = resources.filter(r => r.status === 'approved').length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn text-slate-800 dark:text-slate-200">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in text-slate-800 dark:text-slate-200">
       
       {/* Welcome Banner */}
-      <div className="inst-panel rounded-md p-6 mb-6 border border-slate-200 dark:border-slate-800">
+      <div className="academic-card p-6 sm:p-7 mb-6 border border-slate-200 dark:border-slate-800">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300">
@@ -75,48 +75,56 @@ export function StudentDashboard({
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         
-        <div className="inst-card p-4 rounded-md border-l-4 border-l-blue-600">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+        <div className="academic-card p-5">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
             <span>{lang === 'kn' ? 'ಲಭ್ಯವಿರುವ ಸಂಪನ್ಮೂಲಗಳು' : 'Approved Resources'}</span>
-            <BookOpen className="w-4 h-4 text-blue-600" />
+            <div className="w-8 h-8 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center">
+              <BookOpen className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
+          <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-heading tabular-nums">
             {approvedCount}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Verified curriculum materials</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Verified curriculum materials</p>
         </div>
 
-        <div className="inst-card p-4 rounded-md border-l-4 border-l-emerald-600">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+        <div className="academic-card p-5">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
             <span>{lang === 'kn' ? 'ಪೂರ್ಣಗೊಂಡ ಪರೀಕ್ಷೆಗಳು' : 'Quizzes Completed'}</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <div className="w-8 h-8 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
-            {totalCompleted} / {quizzes.length}
+          <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-heading tabular-nums">
+            {totalCompleted} <span className="text-lg font-normal text-slate-400">/ {quizzes.length}</span>
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Evaluations recorded</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Evaluations recorded</p>
         </div>
 
-        <div className="inst-card p-4 rounded-md border-l-4 border-l-amber-600">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+        <div className="academic-card p-5">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
             <span>{lang === 'kn' ? 'ಸರಾಸರಿ ಅಂಕ' : 'Average Evaluation'}</span>
-            <Award className="w-4 h-4 text-amber-600" />
+            <div className="w-8 h-8 rounded bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center">
+              <Award className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
+          <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-heading tabular-nums">
             {avgScore}%
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Performance indicator</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Performance indicator</p>
         </div>
 
-        <div className="inst-card p-4 rounded-md border-l-4 border-l-slate-600">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+        <div className="academic-card p-5">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
             <span>{lang === 'kn' ? 'ಉಳಿಸಿದ ಸಾಮಗ್ರಿಗಳು' : 'Saved Bookmarks'}</span>
-            <Bookmark className="w-4 h-4 text-slate-600" />
+            <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+              <Bookmark className="w-4 h-4" />
+            </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
+          <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-heading tabular-nums">
             {bookmarks.length}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Quick revision list</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Quick revision list</p>
         </div>
 
       </div>
@@ -127,7 +135,7 @@ export function StudentDashboard({
         <div className="lg:col-span-2 space-y-6">
           
           {/* Syllabus Progress */}
-          <div className="inst-card p-5 rounded-md">
+          <div className="academic-card p-5">
             <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-200 dark:border-slate-800">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
                 <TrendingUp className="w-4 h-4 text-blue-600" />
@@ -170,7 +178,7 @@ export function StudentDashboard({
           </div>
 
           {/* Recent Quiz Performance Table */}
-          <div className="inst-card p-5 rounded-md">
+          <div className="academic-card p-5">
             <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-200 dark:border-slate-800">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
                 <Award className="w-4 h-4 text-amber-600" />
@@ -213,7 +221,7 @@ export function StudentDashboard({
           </div>
 
           {/* Bookmarked Materials */}
-          <div className="inst-card p-5 rounded-md">
+          <div className="academic-card p-5">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 mb-3 pb-2 border-b border-slate-200 dark:border-slate-800">
               <Bookmark className="w-4 h-4 text-blue-600" />
               <span>{lang === 'kn' ? 'ಉಳಿಸಿದ ಅಧ್ಯಯನ ಸಾಮಗ್ರಿಗಳು' : 'Bookmarked Study Materials'}</span>
@@ -248,7 +256,7 @@ export function StudentDashboard({
         <div className="space-y-6">
           
           {/* Institutional Notices */}
-          <div className="inst-card p-5 rounded-md">
+          <div className="academic-card p-5">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 mb-3 pb-2 border-b border-slate-200 dark:border-slate-800">
               <Bell className="w-4 h-4 text-amber-600" />
               <span>{lang === 'kn' ? 'ಶಾಲಾ ಪ್ರಕಟಣೆಗಳು' : 'Institutional Notices'}</span>
@@ -273,7 +281,7 @@ export function StudentDashboard({
           </div>
 
           {/* Quick Quiz Launchers */}
-          <div className="inst-card p-5 rounded-md">
+          <div className="academic-card p-5">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 mb-3 pb-2 border-b border-slate-200 dark:border-slate-800">
               <HelpCircle className="w-4 h-4 text-blue-600" />
               <span>{lang === 'kn' ? 'ಅಧ್ಯಾಯ ರಸಪ್ರಶ್ನೆಗಳು' : 'Chapter Evaluations'}</span>

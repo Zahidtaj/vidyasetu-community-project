@@ -28,8 +28,8 @@ export function CustomDomainModal({ isOpen, onClose, lang }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn text-slate-800 dark:text-slate-200">
-      <div className="inst-panel w-full max-w-xl rounded-md p-6 relative border border-slate-300 dark:border-slate-700 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in text-slate-800 dark:text-slate-200">
+      <div className="w-full max-w-xl rounded-lg p-6 relative bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-2xl animate-modal">
         
         {/* Close Button */}
         <button

@@ -68,8 +68,8 @@ export function BookReaderModal({
   const isVideo = resource.resourceType === 'video';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-fadeIn text-slate-800 dark:text-slate-200">
-      <div className="inst-panel w-full max-w-4xl h-[90vh] rounded-md flex flex-col overflow-hidden border border-slate-300 dark:border-slate-700 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-fade-in text-slate-800 dark:text-slate-200">
+      <div className="w-full max-w-4xl h-[90vh] rounded-lg flex flex-col overflow-hidden bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-2xl animate-modal">
         
         {/* Top Control Bar */}
         <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 shrink-0 bg-slate-50 dark:bg-slate-900">
@@ -202,7 +202,7 @@ export function BookReaderModal({
                 </a>
               </div>
 
-              <div className="w-full inst-card p-5 rounded border border-slate-200 dark:border-slate-800">
+              <div className="w-full academic-card p-5 border border-slate-200 dark:border-slate-800">
                 <h4 className="text-xs font-bold uppercase tracking-wider mb-2">Demonstration Protocol & Notes</h4>
                 <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-mono whitespace-pre-line">
                   {currentChapter.content}

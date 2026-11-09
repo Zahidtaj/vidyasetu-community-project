@@ -13,8 +13,8 @@ export function BookmarksDrawer({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-xs animate-fadeIn text-slate-800 dark:text-slate-200">
-      <div className="w-full max-w-md inst-panel h-full shadow-2xl flex flex-col border-l border-slate-300 dark:border-slate-700 transition-colors">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-xs animate-fade-in text-slate-800 dark:text-slate-200">
+      <div className="w-full max-w-md bg-white dark:bg-[#111827] h-full shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-800 transition-colors">
         
         {/* Drawer Header */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">

@@ -3,7 +3,7 @@ import { FileCheck, ArrowLeft, BookOpen, AlertCircle, Scale, ShieldAlert } from 
 
 export function TermsConditions({ onBack, lang }) {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 animate-fadeIn text-slate-800 dark:text-slate-200">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 animate-fade-in text-slate-800 dark:text-slate-200">
       
       {/* Top back button */}
       <button
@@ -15,13 +15,13 @@ export function TermsConditions({ onBack, lang }) {
       </button>
 
       {/* Header */}
-      <div className="inst-panel p-6 sm:p-8 rounded-md mb-8 border border-slate-200 dark:border-slate-800">
+      <div className="academic-card p-6 sm:p-8 rounded-lg mb-8 border border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+          <div className="p-2.5 rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
             <Scale className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-heading">
               {lang === 'kn' ? 'ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು' : 'Institutional Terms and Conditions of Use'}
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
@@ -29,16 +29,16 @@ export function TermsConditions({ onBack, lang }) {
             </p>
           </div>
         </div>
-        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mt-3">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-3">
           These Terms govern access to and utilization of the VidyaSetu Digital Educational Repository and Assessment Portal, established for Karnataka State Government High Schools under VTU Community Project 1BCP308. All students, teachers, and administrators agree to these terms upon authenticating.
         </p>
       </div>
 
       {/* Terms Sections */}
-      <div className="space-y-6 text-xs leading-relaxed">
+      <div className="space-y-6 text-xs sm:text-sm leading-relaxed">
         
         {/* Clause 1 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
             1. Authorized Educational Purpose and Fair Use
           </h2>
@@ -51,7 +51,7 @@ export function TermsConditions({ onBack, lang }) {
         </div>
 
         {/* Clause 2 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
             2. Academic Integrity in Quiz Evaluations
           </h2>
@@ -64,7 +64,7 @@ export function TermsConditions({ onBack, lang }) {
         </div>
 
         {/* Clause 3 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
             3. Faculty Resource Contribution Protocol
           </h2>
@@ -77,7 +77,7 @@ export function TermsConditions({ onBack, lang }) {
         </div>
 
         {/* Clause 4 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
             4. Administrative Review and Audit Logs
           </h2>
@@ -87,7 +87,7 @@ export function TermsConditions({ onBack, lang }) {
         </div>
 
         {/* Clause 5 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
             5. Disclaimers and Limitations
           </h2>

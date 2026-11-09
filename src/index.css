@@ -1,10 +1,20 @@
 @import "tailwindcss";
 
+/* 
+  Tailwind v4: Class-based Dark Mode
+  Enables dark:* utilities when class="dark" is present on <html> or any parent
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
-    --font-heading: 'Plus Jakarta Sans', 'Noto Sans Kannada', sans-serif;
+    --font-heading: 'Plus Jakarta Sans', 'Noto Sans Kannada', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-body: 'Inter', 'Noto Sans Kannada', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
@@ -14,11 +24,17 @@
     transition: background-color 0.25s ease, color 0.25s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  .dark body {
+    color: #f1f5f9;
+    background-color: #0a0f1d;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.022em;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
@@ -29,7 +45,7 @@
   }
 
   .dark ::selection {
-    background-color: #3b82f6;
+    background-color: #2563eb;
     color: #ffffff;
   }
 }
@@ -42,60 +58,78 @@
   font-family: 'Noto Sans Kannada', sans-serif;
 }
 
-/* Institutional Panels and Surface Highlights */
+/* Glassmorphism & Translucent Surfaces */
+.glass-surface {
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.dark .glass-surface {
+  background-color: rgba(11, 17, 32, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+/* Institutional Panels */
 .inst-panel {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
 }
 
 .dark .inst-panel {
-  background-color: #0f172a;
+  background-color: #111827;
   border: 1px solid #1e293b;
-  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.35);
 }
 
-/* Elevated Card with subtle top highlight */
-.inst-card {
+/* Academic Card: Hairline highlight, smooth hover elevation */
+.academic-card {
   position: relative;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.2s ease,
-              box-shadow 0.2s ease;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease,
+              box-shadow 0.22s ease;
+  overflow: hidden;
 }
 
-.dark .inst-card {
-  background-color: #0f172a;
+.dark .academic-card {
+  background-color: #131b2e;
   border: 1px solid #1e293b;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
 }
 
-.inst-card::before {
+.academic-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.3), transparent);
+  height: 2px;
+  background: linear-gradient(90deg, #1d4ed8, #0284c7, #d97706);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
 }
 
-.inst-card:hover {
+.academic-card:hover {
   transform: translateY(-2px);
   border-color: #93c5fd;
-  box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.09), 0 4px 8px -2px rgba(15, 23, 42, 0.04);
 }
 
-.dark .inst-card:hover {
+.dark .academic-card:hover {
   border-color: #3b82f6;
-  box-shadow: 0 12px 24px -5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 28px -6px rgba(0, 0, 0, 0.5);
 }
 
-.inst-card:hover::before {
+.academic-card:hover::before {
   opacity: 1;
 }
 
@@ -109,8 +143,8 @@
 }
 
 .dark .inst-input {
-  background-color: #1e293b;
-  border: 1px solid #334155;
+  background-color: #162035;
+  border: 1px solid #29354d;
   color: #f8fafc;
 }
 
@@ -120,20 +154,20 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* Button Physical Click Action */
+/* Physical tactile button press */
 .btn-press {
-  transition: transform 0.1s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.1s ease, background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 .btn-press:active {
-  transform: translateY(1px);
+  transform: translateY(1px) scale(0.99);
 }
 
-/* Numbers in Tabular Data */
+/* Tabular Numerals */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-/* Subtle, Custom Scrollbars */
+/* Smooth custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -142,19 +176,50 @@
   background: #f1f5f9;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #0a0f1d;
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #28354c;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #3b4d6b;
+}
+
+/* Subtle keyframe animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalScale {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal {
+  animation: modalScale 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

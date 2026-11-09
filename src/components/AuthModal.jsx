@@ -85,8 +85,8 @@ export function AuthModal({ isOpen, onClose, currentUser, onSelectUser, lang }) 
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn text-slate-800 dark:text-slate-200">
-      <div className="inst-panel w-full max-w-2xl rounded-md p-6 sm:p-7 relative border border-slate-300 dark:border-slate-700 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in text-slate-800 dark:text-slate-200">
+      <div className="w-full max-w-2xl rounded-lg p-6 sm:p-7 relative bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-2xl animate-modal">
         
         {/* Close button */}
         <button 
@@ -151,7 +151,7 @@ export function AuthModal({ isOpen, onClose, currentUser, onSelectUser, lang }) 
                     onSelectUser(account.user);
                     onClose();
                   }}
-                  className={`inst-card p-4 rounded-md cursor-pointer transition-colors border flex flex-col justify-between ${
+                  className={`academic-card p-4 cursor-pointer transition-colors border flex flex-col justify-between ${
                     isSelected 
                       ? 'border-blue-700 bg-blue-50/50 dark:bg-blue-950/20' 
                       : 'hover:border-slate-400'

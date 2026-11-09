@@ -271,6 +271,7 @@ Distributed free of cost strictly for non-commercial educational instruction.`;
         isDark={isDark}
         setIsDark={setIsDark}
         currentUser={currentUser}
+        setCurrentUser={setCurrentUser}
         onOpenAuth={() => setIsAuthOpen(true)}
         onLogout={handleLogout}
         currentView={currentView}
@@ -292,6 +293,8 @@ Distributed free of cost strictly for non-commercial educational instruction.`;
               setSearchQuery={setSearchQuery}
               selectedClass={selectedClass}
               setSelectedClass={setSelectedClass}
+              totalResourcesCount={resources.filter(r => r.status === 'approved').length}
+              totalQuizzesCount={quizzes.length}
             />
 
             <CategoryPills 
@@ -333,7 +336,7 @@ Distributed free of cost strictly for non-commercial educational instruction.`;
               </div>
 
               {filteredResources.length === 0 ? (
-                <div className="inst-panel rounded-md p-10 text-center max-w-md mx-auto border border-slate-200 dark:border-slate-800">
+                <div className="academic-card p-10 text-center max-w-md mx-auto border border-slate-200 dark:border-slate-800">
                   <BookOpen className="w-10 h-10 text-slate-400 mx-auto mb-2 opacity-60" />
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
                     {lang === 'kn' ? 'ಯಾವುದೇ ಸಾಮಗ್ರಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ' : 'No matching curriculum documents found'}
@@ -391,52 +394,52 @@ Distributed free of cost strictly for non-commercial educational instruction.`;
 
         {/* VIEW 3: PRACTICE QUIZZES SHOWCASE */}
         {currentView === 'quizzes' && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn text-slate-800 dark:text-slate-200">
-            <div className="inst-panel rounded-md p-6 mb-6 border border-slate-200 dark:border-slate-800">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-mono">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in text-slate-800 dark:text-slate-200">
+            <div className="academic-card p-6 sm:p-8 mb-8 border border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-blue-50 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-900 font-mono">
                   State Board Formative Assessment Engine
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white font-heading mb-1.5">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-heading mb-2">
                 {lang === 'kn' ? 'ಅಧ್ಯಾಯವಾರು ಆನ್‌ಲೈನ್ ರಸಪ್ರಶ್ನೆ ಪರೀಕ್ಷೆಗಳು' : 'Chapter-wise Formative Evaluations'}
               </h2>
-              <p className="text-xs text-slate-600 dark:text-slate-300 max-w-2xl">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
                 {lang === 'kn' 
                   ? 'ನಿಮ್ಮ ಪರೀಕ್ಷಾ ಸಿದ್ಧತೆಯನ್ನು ಪರೀಕ್ಷಿಸಿಕೊಳ್ಳಿ. ಸ್ವಯಂಚಾಲಿತ ಅಂಕಗಳು ಮತ್ತು ಪ್ರತಿಯೊಂದು ಪ್ರಶ್ನೆಗೆ ವಿವರವಾದ ವಿವರಣೆಗಳೊಂದಿಗೆ.' 
                   : 'Automated MCQ assessments with countdown timer, instantaneous scoring, and scientific explanations aligned with DSERT curriculum blueprints.'}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {quizzes.map((quiz) => (
-                <div key={quiz.id} className="inst-card rounded-md p-5 flex flex-col justify-between border border-slate-200 dark:border-slate-800">
+                <div key={quiz.id} className="academic-card p-6 flex flex-col justify-between border border-slate-200 dark:border-slate-800">
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-mono">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-mono">
                         {quiz.className} | {quiz.subject}
                       </span>
                       <span className="text-xs text-slate-500 flex items-center gap-1 font-mono">
-                        <Clock className="w-3.5 h-3.5" />
+                        <Clock className="w-3.5 h-3.5 text-blue-600" />
                         {quiz.durationMinutes} mins
                       </span>
                     </div>
 
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white font-heading mb-1.5">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-heading mb-2">
                       {lang === 'kn' ? (quiz.titleKn || quiz.title) : quiz.title}
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                      Evaluates Karnataka State Secondary Examination core blueprint competencies.
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-5 leading-relaxed">
+                      Evaluates Karnataka State Secondary Examination core blueprint competencies with instant step derivations.
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                    <span className="text-xs text-slate-500 font-mono">
-                      {quiz.questions.length} Questions
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                    <span className="text-xs text-slate-500 font-mono font-medium">
+                      {quiz.questions.length} MCQ Questions
                     </span>
                     <button
                       onClick={() => setActiveQuiz(quiz)}
-                      className="py-1.5 px-3.5 rounded text-xs font-bold bg-blue-700 hover:bg-blue-800 text-white transition-colors flex items-center gap-1 cursor-pointer"
+                      className="py-2 px-4 rounded text-xs font-bold bg-blue-700 hover:bg-blue-800 text-white transition-all btn-press flex items-center gap-1.5 cursor-pointer shadow-xs"
                     >
                       <span>{lang === 'kn' ? 'ಪರೀಕ್ಷೆ ಆರಂಭಿಸಿ' : 'Start Assessment'}</span>
                       <ArrowRight className="w-3.5 h-3.5" />

@@ -3,7 +3,7 @@ import { Shield, ArrowLeft, CheckCircle2, Lock, FileText, AlertCircle } from 'lu
 
 export function PrivacyPolicy({ onBack, lang }) {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 animate-fadeIn text-slate-800 dark:text-slate-200">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 animate-fade-in text-slate-800 dark:text-slate-200">
       
       {/* Top back button */}
       <button
@@ -15,13 +15,13 @@ export function PrivacyPolicy({ onBack, lang }) {
       </button>
 
       {/* Header */}
-      <div className="inst-panel p-6 sm:p-8 rounded-md mb-8 border border-slate-200 dark:border-slate-800">
+      <div className="academic-card p-6 sm:p-8 rounded-lg mb-8 border border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+          <div className="p-2.5 rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
             <Shield className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-heading">
               {lang === 'kn' ? 'ಗೌಪ್ಯತಾ ನೀತಿ' : 'Institutional Privacy Policy'}
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
@@ -29,16 +29,16 @@ export function PrivacyPolicy({ onBack, lang }) {
             </p>
           </div>
         </div>
-        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mt-3">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-3">
           VidyaSetu operates as a dedicated community academic platform supporting Karnataka State Government High Schools under VTU Community Project Course Code 1BCP308. This policy sets forth our standards for student data protection in adherence to the Digital Personal Data Protection Act (DPDP Act, India 2023) and Karnataka State School Education guidelines.
         </p>
       </div>
 
       {/* Content Sections */}
-      <div className="space-y-6 text-xs leading-relaxed">
+      <div className="space-y-6 text-xs sm:text-sm leading-relaxed">
         
         {/* Section 1 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
             <span>1. Scope and Institutional Purpose</span>
           </h2>
@@ -51,7 +51,7 @@ export function PrivacyPolicy({ onBack, lang }) {
         </div>
 
         {/* Section 2 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
             <span>2. Categories of Information Processed</span>
           </h2>
@@ -63,7 +63,7 @@ export function PrivacyPolicy({ onBack, lang }) {
         </div>
 
         {/* Section 3 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
             <span>3. Cryptographic Storage and Access Controls</span>
           </h2>
@@ -76,7 +76,7 @@ export function PrivacyPolicy({ onBack, lang }) {
         </div>
 
         {/* Section 4 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
             <span>4. Student and Guardian Rights</span>
           </h2>
@@ -91,7 +91,7 @@ export function PrivacyPolicy({ onBack, lang }) {
         </div>
 
         {/* Section 5 */}
-        <div className="inst-card p-6 rounded-md">
+        <div className="academic-card p-6 rounded-lg">
           <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
             <span>5. Institutional Data Officer Contact</span>
           </h2>

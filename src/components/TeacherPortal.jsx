@@ -135,10 +135,10 @@ export function TeacherPortal({
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn text-slate-800 dark:text-slate-200">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in text-slate-800 dark:text-slate-200">
       
       {/* Teacher Profile Banner */}
-      <div className="inst-panel rounded-md p-6 mb-6 border border-slate-200 dark:border-slate-800">
+      <div className="academic-card p-6 sm:p-7 mb-6 border border-slate-200 dark:border-slate-800">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300">
@@ -224,7 +224,7 @@ export function TeacherPortal({
 
       {/* Tab 1: Uploads Status Tracker */}
       {activeTab === 'uploads' && (
-        <div className="inst-card rounded-md p-5">
+        <div className="academic-card p-6">
           <div className="mb-4 pb-2 border-b border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">
               {lang === 'kn' ? 'ಶಿಕ್ಷಕರ ಸಂಪನ್ಮೂಲಗಳ ಪರಿಶೀಲನಾ ಟ್ರ್ಯಾಕರ್' : 'Submitted Curriculum Documents Pipeline'}
@@ -291,7 +291,7 @@ export function TeacherPortal({
 
       {/* Tab 2: Upload New Resource Form */}
       {activeTab === 'new-resource' && (
-        <div className="inst-card rounded-md p-6 max-w-3xl mx-auto">
+        <div className="academic-card p-6 sm:p-8 max-w-3xl mx-auto">
           <div className="mb-5 pb-2 border-b border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading">
               {lang === 'kn' ? 'ಹೊಸ ಕಲಿಕಾ ಸಾಮಗ್ರಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ' : 'Submit Educational Study Material for Review'}
@@ -430,7 +430,7 @@ export function TeacherPortal({
 
       {/* Tab 3: Create Quiz Form */}
       {activeTab === 'new-quiz' && (
-        <div className="inst-card rounded-md p-6 max-w-3xl mx-auto">
+        <div className="academic-card p-6 sm:p-8 max-w-3xl mx-auto">
           <div className="mb-5 pb-2 border-b border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white font-heading">
               {lang === 'kn' ? 'ಹೊಸ ರಸಪ್ರಶ್ನೆ ಪರೀಕ್ಷೆ ರಚಿಸಿ' : 'Construct Chapter Multiple-Choice Assessment'}
@@ -584,7 +584,7 @@ export function TeacherPortal({
 
       {/* Tab 4: Student Scores Matrix */}
       {activeTab === 'scores' && (
-        <div className="inst-card rounded-md p-5">
+        <div className="academic-card p-6">
           <div className="mb-4 pb-2 border-b border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">
               {lang === 'kn' ? 'ವಿದ್ಯಾರ್ಥಿ ರಸಪ್ರಶ್ನೆ ಅಂಕಗಳ ಕೋಷ್ಟಕ' : 'Verified Student Assessment Scoreboard'}
