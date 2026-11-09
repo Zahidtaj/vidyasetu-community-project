@@ -4,17 +4,33 @@
   :root {
     --font-heading: 'Plus Jakarta Sans', 'Noto Sans Kannada', sans-serif;
     --font-body: 'Inter', 'Noto Sans Kannada', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   body {
     font-family: var(--font-body);
     color: #0f172a;
     background-color: #f8fafc;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Browser surface defaults */
+  ::selection {
+    background-color: #1d4ed8;
+    color: #ffffff;
+  }
+
+  .dark ::selection {
+    background-color: #3b82f6;
+    color: #ffffff;
   }
 }
 
@@ -26,41 +42,64 @@
   font-family: 'Noto Sans Kannada', sans-serif;
 }
 
-/* Institutional Panels & Cards (Structured, Clean, No Vibe-Coded Gimmicks) */
+/* Institutional Panels and Surface Highlights */
 .inst-panel {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
 }
 
 .dark .inst-panel {
-  background-color: #111827;
-  border: 1px solid #1f2937;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  background-color: #0f172a;
+  border: 1px solid #1e293b;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.4);
 }
 
+/* Elevated Card with subtle top highlight */
 .inst-card {
+  position: relative;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
 }
 
 .dark .inst-card {
-  background-color: #111827;
-  border: 1px solid #1f2937;
+  background-color: #0f172a;
+  border: 1px solid #1e293b;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.inst-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .inst-card:hover {
-  border-color: #94a3b8;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+  border-color: #93c5fd;
+  box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
 }
 
 .dark .inst-card:hover {
-  border-color: #374151;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  border-color: #3b82f6;
+  box-shadow: 0 12px 24px -5px rgba(0, 0, 0, 0.5);
 }
 
-/* Institutional Input Styling */
+.inst-card:hover::before {
+  opacity: 1;
+}
+
+/* Precision Input Styling */
 .inst-input {
   background-color: #ffffff;
   border: 1px solid #cbd5e1;
@@ -70,36 +109,52 @@
 }
 
 .dark .inst-input {
-  background-color: #1f2937;
-  border: 1px solid #374151;
+  background-color: #1e293b;
+  border: 1px solid #334155;
   color: #f8fafc;
 }
 
 .inst-input:focus {
   outline: none;
   border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* Standard Clean Scrollbar */
+/* Button Physical Click Action */
+.btn-press {
+  transition: transform 0.1s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-press:active {
+  transform: translateY(1px);
+}
+
+/* Numbers in Tabular Data */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle, Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #0b0f17;
+  background: #090d16;
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 4px;
+  background: #334155;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
