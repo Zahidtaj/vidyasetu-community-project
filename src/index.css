@@ -193,6 +193,29 @@
   background: #3b4d6b;
 }
 
+/* Circular Fill Theme View Transition */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 1;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 9999;
+}
+
 /* Subtle keyframe animations */
 @keyframes fadeIn {
   from {

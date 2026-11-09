@@ -45,6 +45,46 @@ export default function App() {
     return saved !== null ? saved === 'dark' : false; // Clean, high-contrast theme
   });
 
+  const handleToggleTheme = (event) => {
+    // If browser doesn't support View Transitions or prefers reduced motion, toggle directly
+    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setIsDark(prev => !prev);
+      return;
+    }
+
+    // Get origin coordinates from mouse click
+    const x = event?.clientX ?? window.innerWidth / 2;
+    const y = event?.clientY ?? window.innerHeight / 2;
+
+    // Radius needed to reach furthest screen corner
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      setIsDark(prev => !prev);
+    });
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`
+      ];
+
+      document.documentElement.animate(
+        {
+          clipPath: clipPath
+        },
+        {
+          duration: 480,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          pseudoElement: '::view-transition-new(root)'
+        }
+      );
+    });
+  };
+
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
@@ -269,7 +309,7 @@ Distributed free of cost strictly for non-commercial educational instruction.`;
         lang={lang}
         setLang={setLang}
         isDark={isDark}
-        setIsDark={setIsDark}
+        onToggleTheme={handleToggleTheme}
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
         onOpenAuth={() => setIsAuthOpen(true)}
@@ -293,8 +333,6 @@ Distributed free of cost strictly for non-commercial educational instruction.`;
               setSearchQuery={setSearchQuery}
               selectedClass={selectedClass}
               setSelectedClass={setSelectedClass}
-              totalResourcesCount={resources.filter(r => r.status === 'approved').length}
-              totalQuizzesCount={quizzes.length}
             />
 
             <CategoryPills 
@@ -311,13 +349,13 @@ Distributed free of cost strictly for non-commercial educational instruction.`;
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
               
-              <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between mb-6 pb-2 border-b border-slate-200/60 dark:border-slate-800/60">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                    {lang === 'kn' ? 'ಲಭ್ಯವಿರುವ ಪಠ್ಯಕ್ರಮ ಸಾಮಗ್ರಿಗಳು' : 'Verified Curriculum Materials'}
+                  <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    {lang === 'kn' ? 'ಪಠ್ಯಕ್ರಮ ಸಾಮಗ್ರಿಗಳು' : 'Curriculum Materials'}
                   </span>
-                  <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
-                    {filteredResources.length}
+                  <span className="text-xs font-mono text-slate-400">
+                    ({filteredResources.length})
                   </span>
                 </div>
 
