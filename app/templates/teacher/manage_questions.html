@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Manage Questions: {{ quiz.title }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-8 max-w-4xl mx-auto">
+
+    <!-- Quiz Header -->
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <span class="text-xs font-bold text-orange-600 uppercase">{{ quiz.class_level.name }} • {{ quiz.subject.name }}</span>
+            <h1 class="text-2xl font-black font-heading text-slate-900 mt-1">
+                {{ quiz.title }}
+            </h1>
+            <p class="text-xs text-slate-500 mt-1">
+                ⏱️ {{ quiz.duration_minutes }} Minutes • {{ questions|length }} Questions configured
+            </p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{{ url_for('quiz.start_quiz', quiz_id=quiz.id) }}" target="_blank" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold text-xs">
+                Preview Quiz
+            </a>
+            <a href="{{ url_for('teacher.quizzes') }}" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">
+                Done / Back
+            </a>
+        </div>
+    </div>
+
+    <!-- Add Question Form Card -->
+    <div class="bg-white rounded-3xl border-2 border-orange-300 p-6 sm:p-8 shadow-md">
+        <h2 class="text-lg font-black font-heading text-slate-900 mb-1 flex items-center gap-2">
+            <span>➕</span>
+            <span>Add New Multiple-Choice Question (MCQ)</span>
+        </h2>
+        <p class="text-xs text-slate-500 mb-6">
+            Enter the question, four possible answers, select the radio button next to the correct answer, and provide an explanation.
+        </p>
+
+        <form method="POST" action="{{ url_for('teacher.manage_questions', quiz_id=quiz.id) }}" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Question Text (English) *
+                </label>
+                <textarea name="question_text" required rows="2" placeholder="e.g. Which organelle is known as the powerhouse of the cell?" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium focus:outline-none focus:border-orange-500 resize-none"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Question Text in Kannada (ಕನ್ನಡದಲ್ಲಿ ಪ್ರಶ್ನೆ)
+                </label>
+                <textarea name="question_text_kn" rows="2" placeholder="ಉದಾ: ಜೀವಕೋಶದ ಶಕ್ತಿ ಕೇಂದ್ರ ಎಂದು ಯಾವುದನ್ನು ಕರೆಯುತ್ತಾರೆ?" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium font-kannada focus:outline-none focus:border-orange-500 resize-none"></textarea>
+            </div>
+
+            <!-- 4 Options with Radio Selection for Correct Answer -->
+            <div class="space-y-3 pt-2">
+                <span class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Answer Options (Select the correct one):
+                </span>
+
+                <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <input type="radio" name="correct_option" value="0" required class="w-4 h-4 text-orange-600 focus:ring-orange-500">
+                    <span class="text-xs font-bold text-slate-500 w-6">A:</span>
+                    <input type="text" name="opt1" required placeholder="Option A text" class="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium focus:outline-none focus:border-orange-500 bg-white">
+                </div>
+
+                <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <input type="radio" name="correct_option" value="1" required class="w-4 h-4 text-orange-600 focus:ring-orange-500">
+                    <span class="text-xs font-bold text-slate-500 w-6">B:</span>
+                    <input type="text" name="opt2" required placeholder="Option B text" class="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium focus:outline-none focus:border-orange-500 bg-white">
+                </div>
+
+                <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <input type="radio" name="correct_option" value="2" required class="w-4 h-4 text-orange-600 focus:ring-orange-500">
+                    <span class="text-xs font-bold text-slate-500 w-6">C:</span>
+                    <input type="text" name="opt3" required placeholder="Option C text" class="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium focus:outline-none focus:border-orange-500 bg-white">
+                </div>
+
+                <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <input type="radio" name="correct_option" value="3" required class="w-4 h-4 text-orange-600 focus:ring-orange-500">
+                    <span class="text-xs font-bold text-slate-500 w-6">D:</span>
+                    <input type="text" name="opt4" required placeholder="Option D text" class="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium focus:outline-none focus:border-orange-500 bg-white">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Explanation (Displayed to student after submission)
+                </label>
+                <textarea name="explanation" rows="2" placeholder="e.g. Mitochondria generate ATP through cellular respiration, earning them the title of the powerhouse of the cell." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-orange-500 resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-black text-xs shadow-md font-heading">
+                Save Question to Quiz
+            </button>
+        </form>
+    </div>
+
+    <!-- Existing Questions in this Quiz -->
+    <div class="space-y-4">
+        <h2 class="text-lg font-black font-heading text-slate-900">
+            Existing Questions ({{ questions|length }})
+        </h2>
+
+        {% if not questions %}
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 text-slate-500 text-xs">
+                No questions added to this quiz yet. Use the form above to add your first question.
+            </div>
+        {% else %}
+            <div class="space-y-4">
+                {% for q in questions %}
+                    <div class="bg-white rounded-2xl border-2 border-amber-200/80 p-5 shadow-2xs space-y-3">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="text-xs font-black text-orange-600 uppercase">Q{{ loop.index }}:</span>
+                                <h3 class="text-sm font-black font-heading text-slate-900 inline ml-1">
+                                    {{ q.question_text }}
+                                </h3>
+                                {% if q.question_text_kn %}
+                                    <p class="text-xs text-slate-600 font-kannada mt-0.5">{{ q.question_text_kn }}</p>
+                                {% endif %}
+                            </div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 shrink-0">
+                                {{ q.marks }} mark
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            {% for opt in q.options %}
+                                <div class="p-2 rounded-xl border {% if opt.is_correct %}bg-emerald-50 border-emerald-300 text-emerald-900 font-bold{% else %}bg-slate-50 border-slate-200 text-slate-700{% endif %} flex items-center justify-between">
+                                    <span>{{ opt.option_text }}</span>
+                                    {% if opt.is_correct %}
+                                        <span class="text-[10px] text-emerald-700 font-extrabold uppercase">✓ Correct</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if q.explanation %}
+                            <div class="text-[11px] text-slate-500 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200">
+                                <strong>Explanation:</strong> {{ q.explanation }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

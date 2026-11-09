@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}My Uploaded Resources — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-amber-200">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900">
+                My Uploaded Resources
+            </h1>
+            <p class="text-xs text-slate-500 font-medium mt-1">
+                View review status, download metrics, and rejection feedback from the administrator.
+            </p>
+        </div>
+        <a href="{{ url_for('teacher.upload_resource') }}" class="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-xs shrink-0 font-heading">
+            + Upload New Resource
+        </a>
+    </div>
+
+    {% if not resources %}
+        <div class="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-amber-200 p-8">
+            <h3 class="text-base font-black font-heading text-slate-800 mb-1">
+                No resources uploaded yet
+            </h3>
+            <p class="text-xs text-slate-500 mb-4 max-w-sm mx-auto">
+                Upload your chapter notes, worksheets, or textbook guides to share with government school students.
+            </p>
+            <a href="{{ url_for('teacher.upload_resource') }}" class="px-4 py-2 rounded-xl bg-orange-600 text-white font-bold text-xs shadow-xs">
+                Upload First Resource
+            </a>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-3xl border-2 border-amber-200/80 shadow-xs overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-700">
+                    <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                        <tr>
+                            <th class="p-3.5">Title & Subject</th>
+                            <th class="p-3.5">Class</th>
+                            <th class="p-3.5">Type</th>
+                            <th class="p-3.5">Status</th>
+                            <th class="p-3.5">Views / Downloads</th>
+                            <th class="p-3.5">Submitted On</th>
+                            <th class="p-3.5 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                        {% for r in resources %}
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3.5">
+                                    <div class="font-bold text-slate-900">{{ r.title }}</div>
+                                    <span class="text-[10px] text-orange-600 font-semibold">{{ r.subject.name }}</span>
+                                    {% if r.status == 'rejected' and r.rejection_reason %}
+                                        <div class="text-[11px] text-red-600 bg-red-50 p-2 rounded-lg mt-1 font-normal border border-red-200">
+                                            <strong>Rejection reason:</strong> {{ r.rejection_reason }}
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td class="p-3.5">{{ r.class_level.name }}</td>
+                                <td class="p-3.5 uppercase text-[10px] font-bold">{{ r.resource_type }}</td>
+                                <td class="p-3.5">
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase {% if r.status == 'approved' %}bg-emerald-100 text-emerald-800{% elif r.status == 'pending' %}bg-amber-100 text-amber-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ r.status }}
+                                    </span>
+                                </td>
+                                <td class="p-3.5 text-slate-500 font-semibold">
+                                    👁️ {{ r.views_count }} • 📥 {{ r.downloads_count }}
+                                </td>
+                                <td class="p-3.5 text-slate-500">{{ r.created_at.strftime('%d %b %Y') }}</td>
+                                <td class="p-3.5 text-right space-x-1">
+                                    {% if r.status == 'approved' %}
+                                        <a href="{{ url_for('library.view_resource', resource_id=r.id) }}" class="px-2.5 py-1 rounded-lg bg-slate-900 text-white font-bold text-[10px]">
+                                            View
+                                        </a>
+                                    {% endif %}
+                                    <form method="POST" action="{{ url_for('teacher.delete_resource', resource_id=r.id) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this resource?');">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="px-2.5 py-1 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 font-bold text-[10px]">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

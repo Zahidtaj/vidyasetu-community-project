@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{{ t('bookmarks') }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <div class="flex items-center justify-between pb-3 border-b border-amber-200">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900">
+                {{ t('bookmarks') }}
+            </h1>
+            <p class="text-xs text-slate-500 font-medium mt-1">
+                Your saved collection of textbooks, notes, and study guides.
+            </p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-200">
+            {{ resources|length }} saved
+        </span>
+    </div>
+
+    {% if not resources %}
+        <div class="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-amber-200 p-8">
+            <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-3 text-2xl">
+                ⭐
+            </div>
+            <h3 class="text-base font-black font-heading text-slate-800 mb-1">
+                No bookmarks saved yet
+            </h3>
+            <p class="text-xs text-slate-500 mb-4 max-w-sm mx-auto">
+                Click the bookmark icon on any textbook or note in the library to save it here for fast access.
+            </p>
+            <a href="{{ url_for('library.index') }}" class="px-4 py-2 rounded-xl bg-orange-600 text-white font-bold text-xs shadow-xs">
+                Browse Digital Library
+            </a>
+        </div>
+    {% else %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {% for r in resources %}
+                <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-900 text-white uppercase">
+                                {{ r.class_level.name }}
+                            </span>
+                            <form method="POST" action="{{ url_for('library.toggle_bookmark', resource_id=r.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" title="Remove Bookmark" class="text-xs text-red-500 hover:text-red-700 font-bold">
+                                    Remove
+                                </button>
+                            </form>
+                        </div>
+
+                        <span class="text-[10px] font-bold text-orange-600 uppercase block mb-1">
+                            {{ r.subject.name }}
+                        </span>
+
+                        <h3 class="text-base font-black font-heading text-slate-900 mb-2 line-clamp-2">
+                            {{ r.title }}
+                        </h3>
+
+                        {% if r.description %}
+                            <p class="text-xs text-slate-500 line-clamp-2 mb-4">
+                                {{ r.description }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-slate-400">
+                            {{ r.category.name }}
+                        </span>
+                        <a href="{{ url_for('library.view_resource', resource_id=r.id) }}" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-orange-600 text-white font-bold text-xs transition-colors">
+                            Read Now →
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

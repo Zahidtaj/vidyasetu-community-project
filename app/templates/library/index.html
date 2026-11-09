@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block title %}{{ t('library') }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Hero Search & Filter Section -->
+    <div class="bg-gradient-to-br from-amber-100/70 via-orange-50/40 to-indigo-50/30 rounded-3xl p-6 sm:p-8 border-2 border-amber-200/80 shadow-sm relative overflow-hidden">
+        
+        <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-bold mb-3 border border-orange-200">
+                <span>📚</span>
+                <span>{{ t('tagline') }}</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 tracking-tight leading-tight mb-2">
+                {% if current_lang == 'kn' %}
+                    ಸರ್ಕಾರಿ ಶಾಲೆಗಳ <span class="text-orange-600">ಡಿಜಿಟಲ್ ಗ್ರಂಥಾಲಯ</span>
+                {% else %}
+                    Digital Library for <span class="text-orange-600">Government Schools</span>
+                {% endif %}
+            </h1>
+
+            <p class="text-xs sm:text-sm text-slate-600 font-medium mb-6">
+                {% if current_lang == 'kn' %}
+                    ೮, ೯ ಮತ್ತು ೧೦ನೇ ತರಗತಿಯ ಪಠ್ಯಪುಸ್ತಕಗಳು, ಟಿಪ್ಪಣಿಗಳು, ಪ್ರಶ್ನೆ ಪತ್ರಿಕೆಗಳು ಹಾಗೂ ವಿಡಿಯೋ ಪಾಠಗಳು — ಉಚಿತ ಹಾಗೂ ಮುಕ್ತವಾಗಿ ಲಭ್ಯ.
+                {% else %}
+                    Access DSERT & NCERT textbooks, chapter-wise notes, educational videos, and previous exam question papers for Classes 8, 9 & 10.
+                {% endif %}
+            </p>
+
+            <!-- Search Form -->
+            <form method="GET" action="{{ url_for('library.index') }}" class="space-y-4">
+                
+                <div class="relative shadow-md rounded-2xl bg-white border-2 border-amber-300 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-100 transition-all flex items-center px-4 py-2.5">
+                    <svg class="w-5 h-5 text-amber-600 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ query_text }}" 
+                        placeholder="{{ t('search_placeholder') }}" 
+                        class="w-full text-slate-800 placeholder-slate-400 focus:outline-none text-xs sm:text-sm font-medium"
+                    />
+                    {% if query_text %}
+                        <a href="{{ url_for('library.index') }}" class="text-xs text-slate-400 hover:text-slate-600 font-bold px-2 py-1">
+                            Clear
+                        </a>
+                    {% endif %}
+                    <button type="submit" class="ml-2 px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-xs shrink-0 font-heading">
+                        Search
+                    </button>
+                </div>
+
+                <!-- Filters Row -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
+                    
+                    <!-- Class Filter -->
+                    <select name="class_id" onchange="this.form.submit()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-white border border-amber-200 text-slate-700 focus:outline-none focus:border-orange-500">
+                        <option value="">{{ t('all_classes') }}</option>
+                        {% for c in classes %}
+                            <option value="{{ c.id }}" {% if selected_class_id == c.id %}selected{% endif %}>
+                                {{ c.name }} ({{ c.name_kn }})
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Subject Filter -->
+                    <select name="subject_id" onchange="this.form.submit()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-white border border-amber-200 text-slate-700 focus:outline-none focus:border-orange-500">
+                        <option value="">{{ t('all_subjects') }}</option>
+                        {% for s in subjects %}
+                            <option value="{{ s.id }}" {% if selected_subject_id == s.id %}selected{% endif %}>
+                                {{ s.name }} ({{ s.class_level.name }})
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Category Filter -->
+                    <select name="category_id" onchange="this.form.submit()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-white border border-amber-200 text-slate-700 focus:outline-none focus:border-orange-500">
+                        <option value="">{{ t('all_types') }}</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if selected_category_id == cat.id %}selected{% endif %}>
+                                {{ cat.name }} ({{ cat.name_kn }})
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Language Filter -->
+                    <select name="language" onchange="this.form.submit()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-white border border-amber-200 text-slate-700 focus:outline-none focus:border-orange-500">
+                        <option value="">{{ t('all_languages') }}</option>
+                        <option value="kn" {% if selected_language == 'kn' %}selected{% endif %}>ಕನ್ನಡ (Kannada)</option>
+                        <option value="en" {% if selected_language == 'en' %}selected{% endif %}>English</option>
+                        <option value="bilingual" {% if selected_language == 'bilingual' %}selected{% endif %}>Bilingual</option>
+                    </select>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Results Header -->
+    <div class="flex items-center justify-between pb-3 border-b border-amber-200">
+        <div class="flex items-center gap-2">
+            <h2 class="text-xl font-black font-heading text-slate-900">
+                {{ t('resources') }}
+            </h2>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-200">
+                {{ resources|length }} items
+            </span>
+        </div>
+
+        {% if selected_class_id or selected_subject_id or selected_category_id or selected_language or query_text %}
+            <a href="{{ url_for('library.index') }}" class="text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1">
+                <span>✕</span>
+                <span>Reset Filters</span>
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Resources Card Grid -->
+    {% if not resources %}
+        <div class="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-amber-200 p-8">
+            <div class="w-16 h-16 rounded-full bg-amber-100 text-orange-600 flex items-center justify-center mx-auto mb-3 text-2xl">
+                📂
+            </div>
+            <h3 class="text-lg font-black font-heading text-slate-800 mb-1">
+                {{ t('no_resources_found') }}
+            </h3>
+            <p class="text-xs text-slate-500 mb-4 max-w-sm mx-auto">
+                Try selecting a different class, subject, or clearing the search keyword.
+            </p>
+            <a href="{{ url_for('library.index') }}" class="px-4 py-2 rounded-xl bg-orange-600 text-white font-bold text-xs shadow-xs">
+                View All Resources
+            </a>
+        </div>
+    {% else %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for r in resources %}
+                <div class="bg-white rounded-3xl border-2 border-amber-200/80 hover:border-orange-400 p-5 shadow-xs hover:shadow-xl hover:shadow-orange-500/10 transition-all flex flex-col justify-between group card-hover">
+                    
+                    <div>
+                        <!-- Resource Type Badge & Class Strip -->
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-black bg-slate-900 text-white uppercase tracking-wider">
+                                {{ r.class_level.name }}
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {% if r.resource_type == 'pdf' %}bg-red-100 text-red-800{% else %}bg-purple-100 text-purple-800{% endif %}">
+                                    {{ r.resource_type|upper }}
+                                </span>
+                                
+                                {% if current_user.is_authenticated %}
+                                    <form method="POST" action="{{ url_for('library.toggle_bookmark', resource_id=r.id) }}" class="inline">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" title="Bookmark Resource" class="p-1 rounded-full text-slate-400 hover:text-amber-500 transition-colors">
+                                            <svg class="w-4 h-4 {% if r.id in user_bookmarks %}text-amber-500 fill-amber-500{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Subject & Title -->
+                        <span class="text-[11px] font-bold text-orange-600 uppercase tracking-wide block mb-1">
+                            {{ r.subject.name }} {% if r.chapter %}• Ch {{ r.chapter.chapter_number }}{% endif %}
+                        </span>
+
+                        <h3 class="text-base font-black font-heading text-slate-900 group-hover:text-orange-600 transition-colors line-clamp-2 leading-snug mb-2">
+                            {% if current_lang == 'kn' and r.title_kn %}{{ r.title_kn }}{% else %}{{ r.title }}{% endif %}
+                        </h3>
+
+                        <!-- Description -->
+                        {% if r.description %}
+                            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">
+                                {{ r.description }}
+                            </p>
+                        {% endif %}
+
+                        <!-- Metadata Badges -->
+                        <div class="flex items-center gap-2 text-[10px] text-slate-500 font-semibold mb-4">
+                            <span>🌐 {{ r.language|upper }}</span>
+                            <span>•</span>
+                            <span>🏷️ {{ r.category.name }}</span>
+                            <span>•</span>
+                            <span>👁️ {{ r.views_count }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Action Bar -->
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <!-- Read Aloud Speech Button -->
+                        <button 
+                            type="button"
+                            onclick="speakText('{{ r.title|replace("'", "\\'") }}', '{{ r.language }}')" 
+                            title="{{ t('listen_audio') }}"
+                            class="p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-orange-700 border border-amber-200 transition-colors"
+                        >
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg>
+                        </button>
+
+                        <!-- Primary View Resource Button -->
+                        <a 
+                            href="{{ url_for('library.view_resource', resource_id=r.id) }}"
+                            class="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-orange-600 text-white font-extrabold text-xs text-center shadow-xs transition-colors font-heading flex items-center justify-center gap-1.5"
+                        >
+                            {% if r.resource_type == 'pdf' %}
+                                <span>{{ t('view_pdf') }}</span>
+                            {% else %}
+                                <span>{{ t('watch_video') }}</span>
+                            {% endif %}
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                        </a>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

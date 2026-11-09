@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}{{ t('quizzes') }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Header & Filter -->
+    <div class="bg-gradient-to-r from-orange-500 via-amber-500 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <span class="px-3 py-1 rounded-full text-xs font-black bg-white/20 uppercase tracking-wider mb-2 inline-block">
+                Assessment Center
+            </span>
+            <h1 class="text-3xl font-black font-heading leading-tight">
+                {{ t('quizzes') }} & Interactive Practice Tests
+            </h1>
+            <p class="text-xs sm:text-sm text-white/90 font-medium max-w-xl">
+                Test your understanding with instant automated scoring, timer-based challenges, and comprehensive answer explanations.
+            </p>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-amber-200">
+        <form method="GET" action="{{ url_for('quiz.list_quizzes') }}" class="flex flex-wrap items-center gap-2">
+            <select name="class_id" onchange="this.form.submit()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-white border border-amber-200 text-slate-700">
+                <option value="">{{ t('all_classes') }}</option>
+                {% for c in classes %}
+                    <option value="{{ c.id }}" {% if selected_class_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="subject_id" onchange="this.form.submit()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-white border border-amber-200 text-slate-700">
+                <option value="">{{ t('all_subjects') }}</option>
+                {% for s in subjects %}
+                    <option value="{{ s.id }}" {% if selected_subject_id == s.id %}selected{% endif %}>{{ s.name }} ({{ s.class_level.name }})</option>
+                {% endfor %}
+            </select>
+
+            {% if selected_class_id or selected_subject_id %}
+                <a href="{{ url_for('quiz.list_quizzes') }}" class="text-xs font-bold text-orange-600 hover:text-orange-700 px-2 py-1">
+                    Clear Filters
+                </a>
+            {% endif %}
+        </form>
+
+        <span class="text-xs font-bold text-slate-500">
+            {{ quizzes|length }} Quizzes Available
+        </span>
+    </div>
+
+    <!-- Quizzes Grid -->
+    {% if not quizzes %}
+        <div class="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-amber-200 p-8">
+            <h3 class="text-base font-black font-heading text-slate-800 mb-1">
+                {{ t('no_quizzes_found') }}
+            </h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">
+                No published tests match your selected class and subject filter.
+            </p>
+        </div>
+    {% else %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for q in quizzes %}
+                {% set prev_attempt = completed_attempt_map.get(q.id) %}
+                <div class="bg-white rounded-3xl border-2 border-amber-200/80 hover:border-orange-400 p-6 shadow-xs hover:shadow-xl hover:shadow-orange-500/10 transition-all flex flex-col justify-between group card-hover">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-900 text-white uppercase">
+                                {{ q.class_level.name }}
+                            </span>
+                            <span class="text-xs font-bold text-slate-500">
+                                ⏱️ {{ q.duration_minutes }} Mins
+                            </span>
+                        </div>
+
+                        <span class="text-[10px] font-bold text-orange-600 uppercase block mb-1">
+                            {{ q.subject.name }}
+                        </span>
+
+                        <h3 class="text-base font-black font-heading text-slate-900 group-hover:text-orange-600 transition-colors mb-2">
+                            {% if current_lang == 'kn' and q.title_kn %}{{ q.title_kn }}{% else %}{{ q.title }}{% endif %}
+                        </h3>
+
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-2">
+                            {{ q.instructions or 'Practice test designed to assess fundamental concepts and problem-solving skills.' }}
+                        </p>
+
+                        <!-- Previous Attempt Score Badge if available -->
+                        {% if prev_attempt %}
+                            <div class="mb-4 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
+                                <span class="font-bold text-emerald-800">Your Best Score:</span>
+                                <span class="font-black text-emerald-700">{{ prev_attempt.score }} / {{ prev_attempt.max_score }} ({{ prev_attempt.percentage }}%)</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-slate-400">
+                            {{ q.questions.count() }} Questions
+                        </span>
+                        <a href="{{ url_for('quiz.start_quiz', quiz_id=q.id) }}" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-orange-600 text-white font-bold text-xs shadow-xs transition-colors">
+                            {% if prev_attempt %}Retake Quiz →{% else %}Start Quiz →{% endif %}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

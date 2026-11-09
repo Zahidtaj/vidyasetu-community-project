@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}{{ t('upload_new_resource') }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto my-6">
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 shadow-xl shadow-amber-500/5 p-6 sm:p-8">
+        
+        <div class="mb-6 pb-4 border-b border-slate-100">
+            <h1 class="text-2xl font-black font-heading text-slate-900">
+                {{ t('upload_new_resource') }}
+            </h1>
+            <p class="text-xs text-slate-500 font-medium mt-1">
+                Contribute educational textbooks, notes, question papers, or video links. All submissions are reviewed by the administrator before publication.
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('teacher.upload_resource') }}" enctype="multipart/form-data" class="space-y-4">
+            {{ form.hidden_tag() }}
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    {{ t('resource_title') }} *
+                </label>
+                {{ form.title(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 text-sm font-medium", placeholder="e.g. Chapter 1 Notes: Laws of Motion") }}
+                {% if form.title.errors %}
+                    <p class="text-xs text-red-600 mt-1 font-semibold">{{ form.title.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Resource Title in Kannada (ಕನ್ನಡ ಶೀರ್ಷಿಕೆ)
+                </label>
+                {{ form.title_kn(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 text-sm font-medium font-kannada", placeholder="ಉದಾ: ಅಧ್ಯಾಯ ೧: ಚಲನೆಯ ನಿಯಮಗಳು") }}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Class *
+                    </label>
+                    {{ form.class_id(class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold") }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Subject *
+                    </label>
+                    {{ form.subject_id(class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold") }}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Chapter
+                    </label>
+                    {{ form.chapter_id(class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold") }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Category *
+                    </label>
+                    {{ form.category_id(class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold") }}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Content Type *
+                    </label>
+                    {{ form.resource_type(class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold", id="resource_type_select") }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Language of Content *
+                    </label>
+                    {{ form.language(class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold") }}
+                </div>
+            </div>
+
+            <div id="pdf_upload_section">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Upload PDF Document (.pdf only)
+                </label>
+                {{ form.pdf_file(class="w-full px-4 py-2 rounded-xl border border-slate-200 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100") }}
+                {% if form.pdf_file.errors %}
+                    <p class="text-xs text-red-600 mt-1 font-semibold">{{ form.pdf_file.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <div id="video_url_section">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    {{ t('video_url') }}
+                </label>
+                {{ form.video_url(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium", placeholder="https://www.youtube.com/watch?v=...") }}
+                {% if form.video_url.errors %}
+                    <p class="text-xs text-red-600 mt-1 font-semibold">{{ form.video_url.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Summary / Description
+                </label>
+                {{ form.description(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium resize-none", rows="3", placeholder="Brief summary of key concepts covered...") }}
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                <a href="{{ url_for('teacher.dashboard') }}" class="text-xs font-bold text-slate-500 hover:text-slate-700">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-black text-xs shadow-md font-heading">
+                    Submit for Administrator Review
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+{% endblock %}

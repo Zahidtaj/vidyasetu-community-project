@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Curriculum Structure — Administrator{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <div class="pb-3 border-b border-amber-200">
+        <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900">
+            Curriculum & Academic Structure
+        </h1>
+        <p class="text-xs text-slate-500 font-medium mt-1">
+            Manage the academic hierarchy: Classes (ತರಗತಿಗಳು) → Subjects (ವಿಷಯಗಳು) → Chapters (ಅಧ್ಯಾಯಗಳು).
+        </p>
+    </div>
+
+    <!-- Quick Add Modals / Accordions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Add Class Card -->
+        <div class="bg-white rounded-3xl border-2 border-amber-200 p-5 shadow-2xs">
+            <h3 class="text-sm font-black font-heading text-slate-900 mb-3 flex items-center gap-1.5">
+                <span>➕</span>
+                <span>Add New Class</span>
+            </h3>
+            <form method="POST" action="{{ url_for('admin.add_class') }}" class="space-y-2.5">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" name="name" required placeholder="e.g. Class 11" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                <input type="text" name="name_kn" required placeholder="ಉದಾ: ೧೧ನೇ ತರಗತಿ" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-kannada">
+                <input type="text" name="description" placeholder="Optional notes" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                <button type="submit" class="w-full py-2 rounded-xl bg-slate-900 hover:bg-orange-600 text-white font-bold text-xs">
+                    Create Class
+                </button>
+            </form>
+        </div>
+
+        <!-- Add Subject Card -->
+        <div class="bg-white rounded-3xl border-2 border-amber-200 p-5 shadow-2xs">
+            <h3 class="text-sm font-black font-heading text-slate-900 mb-3 flex items-center gap-1.5">
+                <span>➕</span>
+                <span>Add New Subject</span>
+            </h3>
+            <form method="POST" action="{{ url_for('admin.add_subject') }}" class="space-y-2.5">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="class_id" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                    <option value="">Select Class</option>
+                    {% for c in classes %}
+                        <option value="{{ c.id }}">{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="name" required placeholder="Subject Name (e.g. Social Science)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                <input type="text" name="name_kn" required placeholder="ವಿಷಯ (ಉದಾ: ಸಮಾಜ ವಿಜ್ಞಾನ)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-kannada">
+                <input type="text" name="code" placeholder="Code (e.g. SS-10)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                <button type="submit" class="w-full py-2 rounded-xl bg-slate-900 hover:bg-orange-600 text-white font-bold text-xs">
+                    Add Subject
+                </button>
+            </form>
+        </div>
+
+        <!-- Add Chapter Card -->
+        <div class="bg-white rounded-3xl border-2 border-amber-200 p-5 shadow-2xs">
+            <h3 class="text-sm font-black font-heading text-slate-900 mb-3 flex items-center gap-1.5">
+                <span>➕</span>
+                <span>Add Chapter</span>
+            </h3>
+            <form method="POST" action="{{ url_for('admin.add_chapter') }}" class="space-y-2.5">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="subject_id" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                    <option value="">Select Subject</option>
+                    {% for c in classes %}
+                        <optgroup label="{{ c.name }}">
+                            {% for s in c.subjects %}
+                                <option value="{{ s.id }}">{{ s.name }} ({{ c.name }})</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
+                </select>
+                <input type="number" name="chapter_number" min="1" required placeholder="Chapter Number (e.g. 1)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                <input type="text" name="title" required placeholder="Chapter Title (e.g. Real Numbers)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                <input type="text" name="title_kn" required placeholder="ಅಧ್ಯಾಯ ಶೀರ್ಷಿಕೆ (ಉದಾ: ವಾಸ್ತವ ಸಂಖ್ಯೆಗಳು)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-kannada">
+                <button type="submit" class="w-full py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs">
+                    Save Chapter
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Hierarchy Tree View -->
+    <div class="space-y-6">
+        <h2 class="text-lg font-black font-heading text-slate-900">
+            Current Academic Tree
+        </h2>
+
+        {% for c in classes %}
+            <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 shadow-2xs space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-xl bg-orange-600 text-white font-bold flex items-center justify-center text-xs">
+                            {{ c.name.split(' ')[-1] if ' ' in c.name else 'C' }}
+                        </span>
+                        <div>
+                            <h3 class="text-lg font-black font-heading text-slate-900">{{ c.name }}</h3>
+                            <p class="text-xs text-orange-700 font-kannada font-bold">{{ c.name_kn }}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-slate-500">
+                        {{ c.subjects.count() }} Subjects
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for s in c.subjects %}
+                        <div class="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/80 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-sm font-black font-heading text-slate-900">{{ s.name }}</h4>
+                                <span class="text-[10px] font-bold text-slate-400">{{ s.code or '' }}</span>
+                            </div>
+                            <p class="text-xs text-slate-600 font-kannada">{{ s.name_kn }}</p>
+
+                            <div class="pt-2 border-t border-amber-200/60 text-[11px] text-slate-500">
+                                <strong>{{ s.chapters.count() }} Chapters:</strong>
+                                <ul class="mt-1 space-y-0.5">
+                                    {% for ch in s.chapters %}
+                                        <li>• Ch {{ ch.chapter_number }}: {{ ch.title }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

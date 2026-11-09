@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}{{ subject.name }} ({{ subject.class_level.name }}) — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Subject Banner -->
+    <div class="bg-gradient-to-r from-orange-500 via-amber-500 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+        <div class="relative z-10 space-y-2">
+            <span class="px-3 py-1 rounded-full text-xs font-black bg-white/20 uppercase tracking-wider">
+                {{ subject.class_level.name }}
+            </span>
+            <h1 class="text-3xl sm:text-4xl font-black font-heading leading-tight">
+                {{ subject.name }} <span class="font-kannada font-bold text-2xl text-amber-200">({{ subject.name_kn }})</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-white/90 font-medium">
+                {{ chapters|length }} Chapters • {{ resources|length }} Learning Resources • {{ quizzes|length }} Quizzes
+            </p>
+        </div>
+    </div>
+
+    <!-- Chapter Progression List -->
+    <div class="space-y-4">
+        <h2 class="text-xl font-black font-heading text-slate-900 flex items-center gap-2">
+            <span>📖</span>
+            <span>{{ t('chapters') }} & Curriculum Progression</span>
+        </h2>
+
+        {% if not chapters %}
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 text-slate-500 text-xs">
+                No chapters added to this subject yet.
+            </div>
+        {% else %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for ch in chapters %}
+                    {% set is_done = ch.id in completed_chapter_ids %}
+                    <div class="bg-white rounded-2xl border-2 {% if is_done %}border-emerald-300 bg-emerald-50/20{% else %}border-amber-200/80{% endif %} p-5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-extrabold text-orange-600 uppercase">
+                                    Chapter {{ ch.chapter_number }}
+                                </span>
+                                {% if current_user.is_authenticated and current_user.is_student %}
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black {% if is_done %}bg-emerald-100 text-emerald-800 border border-emerald-300{% else %}bg-slate-100 text-slate-600{% endif %}">
+                                        {% if is_done %}Completed ✓{% else %}In Progress{% endif %}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <h3 class="text-base font-black font-heading text-slate-900 mb-1">
+                                {{ ch.title }}
+                            </h3>
+                            <p class="text-xs text-slate-600 font-kannada mb-3">
+                                {{ ch.title_kn }}
+                            </p>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[11px] text-slate-500 font-semibold">
+                                {{ ch.resources.count() }} materials • {{ ch.quizzes.count() }} quizzes
+                            </span>
+                            <a href="{{ url_for('library.chapter_detail', chapter_id=ch.id) }}" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-orange-600 text-white text-xs font-bold font-heading transition-colors">
+                                View Chapter →
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Subject Resources Section -->
+    <div class="space-y-4 pt-4 border-t border-amber-200">
+        <h2 class="text-xl font-black font-heading text-slate-900 flex items-center gap-2">
+            <span>📑</span>
+            <span>All {{ subject.name }} Resources</span>
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for r in resources %}
+                <div class="bg-white rounded-2xl border border-amber-200 p-4 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 uppercase">
+                                {{ r.category.name }}
+                            </span>
+                            <span class="text-[10px] font-bold text-slate-400">
+                                👁️ {{ r.views_count }}
+                            </span>
+                        </div>
+                        <h4 class="text-sm font-black font-heading text-slate-900 line-clamp-2 mb-1">
+                            {{ r.title }}
+                        </h4>
+                        <p class="text-xs text-slate-500 line-clamp-2 mb-3">
+                            {{ r.description }}
+                        </p>
+                    </div>
+                    <a href="{{ url_for('library.view_resource', resource_id=r.id) }}" class="text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1">
+                        <span>Read or Watch</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}404 Not Found — VidyaSetu{% endblock %}
+{% block content %}
+<div class="text-center py-20 px-4">
+    <div class="w-16 h-16 rounded-3xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-4 text-2xl font-black">
+        🔍
+    </div>
+    <h1 class="text-3xl font-black font-heading text-slate-900 mb-2">404 — Page or Resource Not Found</h1>
+    <p class="text-slate-600 max-w-md mx-auto mb-6 text-sm">
+        The requested chapter, quiz, or educational resource could not be found. It may have been relocated or removed.
+    </p>
+    <a href="{{ url_for('library.index') }}" class="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-xs transition-colors">
+        Browse Digital Library
+    </a>
+</div>
+{% endblock %}

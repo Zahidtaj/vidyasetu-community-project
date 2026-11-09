@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Content Approval Desk — Administrator{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <div class="pb-3 border-b border-amber-200">
+        <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900">
+            Educational Content Approval Queue
+        </h1>
+        <p class="text-xs text-slate-500 font-medium mt-1">
+            Carefully review teacher-submitted study materials, notes, and video links to ensure quality and curriculum alignment before publishing.
+        </p>
+    </div>
+
+    <!-- Pending Queue -->
+    <div class="space-y-4">
+        <h2 class="text-lg font-black font-heading text-slate-900 flex items-center gap-2">
+            <span>⏳</span>
+            <span>Pending Submissions ({{ pending_resources|length }})</span>
+        </h2>
+
+        {% if not pending_resources %}
+            <div class="p-8 text-center text-slate-500 text-xs bg-white rounded-3xl border-2 border-dashed border-amber-200">
+                <span class="text-2xl block mb-2">🎉</span>
+                All submissions have been reviewed! There are no pending materials awaiting verification.
+            </div>
+        {% else %}
+            <div class="space-y-5">
+                {% for r in pending_resources %}
+                    <div class="bg-white rounded-3xl border-2 border-amber-300 p-6 shadow-sm">
+                        
+                        <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-4">
+                            <div class="space-y-1">
+                                <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-900 text-white uppercase">
+                                        {{ r.class_level.name }}
+                                    </span>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-orange-800">
+                                        {{ r.subject.name }}
+                                    </span>
+                                    {% if r.chapter %}
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">
+                                            Ch {{ r.chapter.chapter_number }}: {{ r.chapter.title }}
+                                        </span>
+                                    {% endif %}
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase {% if r.resource_type == 'pdf' %}bg-red-100 text-red-800{% else %}bg-purple-100 text-purple-800{% endif %}">
+                                        {{ r.resource_type }}
+                                    </span>
+                                </div>
+
+                                <h3 class="text-lg font-black font-heading text-slate-900">
+                                    {{ r.title }}
+                                </h3>
+                                {% if r.title_kn %}
+                                    <p class="text-xs text-slate-600 font-kannada font-bold">{{ r.title_kn }}</p>
+                                {% endif %}
+
+                                {% if r.description %}
+                                    <p class="text-xs text-slate-500 max-w-2xl mt-2 leading-relaxed">
+                                        {{ r.description }}
+                                    </p>
+                                {% endif %}
+
+                                <p class="text-[11px] text-slate-400 pt-1">
+                                    Submitted by: <strong class="text-slate-700">{{ r.uploader.full_name if r.uploader else 'Teacher' }}</strong> ({{ r.uploader.email if r.uploader else '' }}) on {{ r.created_at.strftime('%d %b %Y, %I:%M %p') }}
+                                </p>
+                            </div>
+
+                            <!-- Preview link -->
+                            <div class="shrink-0">
+                                {% if r.resource_type == 'pdf' and r.file_path %}
+                                    <a href="{{ url_for('static', filename=r.file_path) }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold inline-flex items-center gap-1.5">
+                                        <span>Inspect PDF File</span>
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                    </a>
+                                {% elif r.resource_type == 'video' and r.video_url %}
+                                    <a href="{{ r.video_url }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold inline-flex items-center gap-1.5">
+                                        <span>Verify Video Link</span>
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Decision Form: Approve or Reject -->
+                        <div class="pt-4 border-t border-slate-100 bg-amber-50/40 -mx-6 -mb-6 p-6 rounded-b-3xl">
+                            <form method="POST" action="{{ url_for('admin.process_approval', resource_id=r.id) }}" class="space-y-3">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                                    <div class="flex-1 w-full">
+                                        <input 
+                                            type="text" 
+                                            name="rejection_reason" 
+                                            placeholder="Enter rejection reason or feedback if rejecting (e.g. Page 3 missing, improper formatting)..."
+                                            class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-red-500 bg-white"
+                                        />
+                                    </div>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <button 
+                                            type="submit" 
+                                            name="decision" 
+                                            value="approve" 
+                                            class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs"
+                                        >
+                                            ✓ Approve & Publish
+                                        </button>
+                                        <button 
+                                            type="submit" 
+                                            name="decision" 
+                                            value="reject" 
+                                            class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-xs"
+                                        >
+                                            ✕ Reject with Reason
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Approval History -->
+    {% if history %}
+        <div class="space-y-4 pt-6 border-t border-amber-200">
+            <h2 class="text-lg font-black font-heading text-slate-900">
+                Recent Decisions History
+            </h2>
+
+            <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-xs overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-700">
+                        <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                            <tr>
+                                <th class="p-3">Resource Title</th>
+                                <th class="p-3">Class & Subject</th>
+                                <th class="p-3">Uploader</th>
+                                <th class="p-3">Decision</th>
+                                <th class="p-3">Reason (If Rejected)</th>
+                                <th class="p-3 text-right">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-medium">
+                            {% for h in history %}
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-3 font-bold text-slate-900">{{ h.title }}</td>
+                                    <td class="p-3">{{ h.class_level.name }} • {{ h.subject.name }}</td>
+                                    <td class="p-3">{{ h.uploader.full_name if h.uploader else 'Teacher' }}</td>
+                                    <td class="p-3">
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase {% if h.status == 'approved' %}bg-emerald-100 text-emerald-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                            {{ h.status }}
+                                        </span>
+                                    </td>
+                                    <td class="p-3 text-slate-500">{{ h.rejection_reason or '—' }}</td>
+                                    <td class="p-3 text-slate-400 text-right">{{ h.updated_at.strftime('%d %b %Y') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard') }} — Teacher Desk{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Welcome Greeting Strip -->
+    <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-2">
+                <span>👩‍🏫</span>
+                <span>Teacher Workspace • ಶಿಕ್ಷಕರ ಕೊಠಡಿ</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-black font-heading leading-tight">
+                Welcome, {{ current_user.full_name }}!
+            </h1>
+            <p class="text-xs sm:text-sm text-white/90 font-medium max-w-xl">
+                Contribute educational PDFs, notes, video lessons, and create chapter quizzes for your assigned classes.
+            </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ url_for('teacher.upload_resource') }}" class="px-5 py-3 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-black text-xs shadow-md transition-all font-heading">
+                + Upload Learning Material
+            </a>
+            <a href="{{ url_for('teacher.create_quiz') }}" class="px-5 py-3 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-black text-xs shadow-md transition-all font-heading">
+                + Create Quiz
+            </a>
+        </div>
+    </div>
+
+    <!-- Assigned Classes Strip -->
+    {% if assignments %}
+        <div class="bg-blue-50/60 border border-blue-200 rounded-2xl p-4 flex flex-wrap items-center gap-3">
+            <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Your Assigned Classes:</span>
+            {% for a in assignments %}
+                <span class="px-3 py-1 rounded-xl text-xs font-extrabold bg-white border border-blue-200 text-blue-800 shadow-2xs">
+                    {{ a.assigned_class.name }} • {{ a.subject.name }}
+                </span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Resource Upload Metrics -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        
+        <div class="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-2xs">
+            <div class="text-xs font-bold text-slate-500 uppercase mb-1">Total Uploads</div>
+            <div class="text-3xl font-black font-heading text-slate-900">{{ total_uploads }}</div>
+            <p class="text-[11px] text-slate-400 mt-1">Submitted resources</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-emerald-200 p-5 shadow-2xs">
+            <div class="text-xs font-bold text-emerald-700 uppercase mb-1">Approved & Live</div>
+            <div class="text-3xl font-black font-heading text-emerald-600">{{ approved_count }}</div>
+            <p class="text-[11px] text-slate-400 mt-1">In student library</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-amber-200 p-5 shadow-2xs">
+            <div class="text-xs font-bold text-amber-700 uppercase mb-1">Pending Approval</div>
+            <div class="text-3xl font-black font-heading text-amber-600">{{ pending_count }}</div>
+            <p class="text-[11px] text-slate-400 mt-1">Under review by admin</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-purple-200 p-5 shadow-2xs">
+            <div class="text-xs font-bold text-purple-700 uppercase mb-1">My Quizzes</div>
+            <div class="text-3xl font-black font-heading text-purple-600">{{ total_quizzes }}</div>
+            <p class="text-[11px] text-slate-400 mt-1">Published tests</p>
+        </div>
+
+    </div>
+
+    <!-- Recent Student Attempts on Teacher's Quizzes -->
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 sm:p-8 shadow-xs space-y-4">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-black font-heading text-slate-900 flex items-center gap-2">
+                <span>📝</span>
+                <span>Recent Student Quiz Attempts</span>
+            </h2>
+            <a href="{{ url_for('teacher.student_performance') }}" class="text-xs font-bold text-orange-600 hover:text-orange-700">
+                Full Performance Table →
+            </a>
+        </div>
+
+        {% if not recent_attempts %}
+            <div class="p-6 text-center text-slate-500 text-xs bg-slate-50 rounded-2xl border border-slate-200">
+                No students have attempted your quizzes yet.
+            </div>
+        {% else %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-700">
+                    <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                        <tr>
+                            <th class="p-3 rounded-l-xl">Student Name</th>
+                            <th class="p-3">Quiz</th>
+                            <th class="p-3">Class</th>
+                            <th class="p-3">Date</th>
+                            <th class="p-3">Score</th>
+                            <th class="p-3 rounded-r-xl">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                        {% for a in recent_attempts %}
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">{{ a.student.full_name }}</td>
+                                <td class="p-3">{{ a.quiz.title }}</td>
+                                <td class="p-3">{{ a.quiz.class_level.name }}</td>
+                                <td class="p-3 text-slate-500">{{ a.completed_at.strftime('%d %b %Y, %I:%M %p') if a.completed_at else 'In progress' }}</td>
+                                <td class="p-3 font-bold">{{ a.score }} / {{ a.max_score }}</td>
+                                <td class="p-3">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black {% if a.percentage >= 75 %}bg-emerald-100 text-emerald-800{% elif a.percentage >= 40 %}bg-amber-100 text-amber-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ a.percentage }}%
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

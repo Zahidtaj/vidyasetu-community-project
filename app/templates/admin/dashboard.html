@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Administrator Dashboard — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Admin Greeting Banner -->
+    <div class="bg-gradient-to-r from-purple-800 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-2">
+                <span>🛡️</span>
+                <span>Central Administrator Console</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-black font-heading leading-tight">
+                Platform Overview
+            </h1>
+            <p class="text-xs sm:text-sm text-white/80 font-medium max-w-xl">
+                Global governance for Karnataka Government Schools Digital Library. Manage users, curriculum, review teacher resource submissions, and audit activity.
+            </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ url_for('admin.approvals') }}" class="px-5 py-3 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-black text-xs shadow-md transition-all font-heading relative">
+                <span>Pending Approvals</span>
+                {% if pending_approvals > 0 %}
+                    <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white text-[11px] font-bold flex items-center justify-center shadow-sm animate-pulse">
+                        {{ pending_approvals }}
+                    </span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('admin.create_user') }}" class="px-5 py-3 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-black text-xs shadow-md transition-all font-heading">
+                + Create User Account
+            </a>
+        </div>
+    </div>
+
+    <!-- Metrics Cards Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        
+        <div class="bg-white rounded-2xl border-2 border-slate-200 p-4 shadow-2xs">
+            <span class="text-[10px] font-bold uppercase text-slate-500">Students</span>
+            <div class="text-2xl font-black font-heading text-slate-900 mt-1">{{ total_students }}</div>
+            <span class="text-[10px] text-slate-400">Enrolled accounts</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-slate-200 p-4 shadow-2xs">
+            <span class="text-[10px] font-bold uppercase text-slate-500">Teachers</span>
+            <div class="text-2xl font-black font-heading text-slate-900 mt-1">{{ total_teachers }}</div>
+            <span class="text-[10px] text-slate-400">Faculty accounts</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-slate-200 p-4 shadow-2xs">
+            <span class="text-[10px] font-bold uppercase text-slate-500">Classes</span>
+            <div class="text-2xl font-black font-heading text-slate-900 mt-1">{{ total_classes }}</div>
+            <span class="text-[10px] text-slate-400">Active grades</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-slate-200 p-4 shadow-2xs">
+            <span class="text-[10px] font-bold uppercase text-slate-500">Subjects</span>
+            <div class="text-2xl font-black font-heading text-slate-900 mt-1">{{ total_subjects }}</div>
+            <span class="text-[10px] text-slate-400">Course streams</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-emerald-200 p-4 shadow-2xs">
+            <span class="text-[10px] font-bold uppercase text-emerald-700">Live Resources</span>
+            <div class="text-2xl font-black font-heading text-emerald-600 mt-1">{{ total_resources }}</div>
+            <span class="text-[10px] text-slate-400">Approved materials</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border-2 border-amber-200 p-4 shadow-2xs">
+            <span class="text-[10px] font-bold uppercase text-amber-700">Pending Review</span>
+            <div class="text-2xl font-black font-heading text-amber-600 mt-1">{{ pending_approvals }}</div>
+            <span class="text-[10px] text-slate-400">Awaiting approval</span>
+        </div>
+
+    </div>
+
+    <!-- Quick Sections Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Pending Approvals Quick Queue -->
+        <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-black font-heading text-slate-900 flex items-center gap-2">
+                    <span>⏳</span>
+                    <span>Pending Submissions Queue</span>
+                </h2>
+                <a href="{{ url_for('admin.approvals') }}" class="text-xs font-bold text-orange-600 hover:text-orange-700">
+                    Review All ({{ pending_approvals }}) →
+                </a>
+            </div>
+
+            {% if not pending_list %}
+                <div class="p-6 text-center text-slate-500 text-xs bg-emerald-50 rounded-2xl border border-emerald-200">
+                    ✅ All submitted teacher resources have been reviewed! No pending items.
+                </div>
+            {% else %}
+                <div class="space-y-3">
+                    {% for r in pending_list %}
+                        <div class="p-3.5 rounded-2xl bg-amber-50/50 border border-amber-200 flex items-center justify-between gap-3">
+                            <div class="truncate">
+                                <span class="text-[10px] font-bold uppercase text-orange-600">{{ r.class_level.name }} • {{ r.subject.name }}</span>
+                                <h4 class="text-xs font-black font-heading text-slate-900 truncate">{{ r.title }}</h4>
+                                <p class="text-[11px] text-slate-500">By: {{ r.uploader.full_name if r.uploader else 'Teacher' }}</p>
+                            </div>
+                            <a href="{{ url_for('admin.approvals') }}" class="px-3 py-1.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shrink-0">
+                                Review
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent System Activity Audit Logs -->
+        <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-black font-heading text-slate-900 flex items-center gap-2">
+                    <span>📜</span>
+                    <span>Recent System Audit Activity</span>
+                </h2>
+                <a href="{{ url_for('admin.activity_logs') }}" class="text-xs font-bold text-orange-600 hover:text-orange-700">
+                    Full Audit Log →
+                </a>
+            </div>
+
+            <div class="space-y-2.5">
+                {% for log in recent_logs %}
+                    <div class="text-xs p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-slate-900">{{ log.action }}</span>
+                            {% if log.details %}
+                                <span class="text-slate-500 text-[11px] block">{{ log.details }}</span>
+                            {% endif %}
+                        </div>
+                        <span class="text-[10px] text-slate-400 shrink-0 ml-2">
+                            {{ log.timestamp.strftime('%H:%M:%S') }}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

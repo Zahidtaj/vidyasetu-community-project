@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Student Performance — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <div class="pb-3 border-b border-amber-200">
+        <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900">
+            Student Assessment Performance
+        </h1>
+        <p class="text-xs text-slate-500 font-medium mt-1">
+            Detailed breakdown of student attempts, marks scored, and submission dates across your created quizzes.
+        </p>
+    </div>
+
+    {% if not attempts %}
+        <div class="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-amber-200 p-8">
+            <h3 class="text-base font-black font-heading text-slate-800 mb-1">
+                No quiz submissions yet
+            </h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">
+                Once students attempt and submit your quizzes, their evaluation scores and performance records will be recorded here.
+            </p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-3xl border-2 border-amber-200/80 shadow-xs overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-700">
+                    <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                        <tr>
+                            <th class="p-3.5">Student Name & Email</th>
+                            <th class="p-3.5">Quiz Title</th>
+                            <th class="p-3.5">Class & Subject</th>
+                            <th class="p-3.5">Marks Scored</th>
+                            <th class="p-3.5">Percentage</th>
+                            <th class="p-3.5">Submission Date</th>
+                            <th class="p-3.5 text-right">Review</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                        {% for a in attempts %}
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3.5">
+                                    <div class="font-bold text-slate-900">{{ a.student.full_name }}</div>
+                                    <div class="text-[10px] text-slate-400">{{ a.student.email }}</div>
+                                </td>
+                                <td class="p-3.5 font-bold text-slate-800">{{ a.quiz.title }}</td>
+                                <td class="p-3.5 text-slate-600">{{ a.quiz.class_level.name }} • {{ a.quiz.subject.name }}</td>
+                                <td class="p-3.5 font-bold">{{ a.score }} / {{ a.max_score }}</td>
+                                <td class="p-3.5">
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-black {% if a.percentage >= 75 %}bg-emerald-100 text-emerald-800{% elif a.percentage >= 40 %}bg-amber-100 text-amber-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ a.percentage }}%
+                                    </span>
+                                </td>
+                                <td class="p-3.5 text-slate-500">{{ a.completed_at.strftime('%d %b %Y, %I:%M %p') if a.completed_at else 'Incomplete' }}</td>
+                                <td class="p-3.5 text-right">
+                                    <a href="{{ url_for('quiz.view_result', attempt_id=a.id) }}" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-orange-600 text-white font-bold text-[11px] transition-colors">
+                                        Review
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

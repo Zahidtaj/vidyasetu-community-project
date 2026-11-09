@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}User Management — Administrator{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-amber-200">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900">
+                User Account Management
+            </h1>
+            <p class="text-xs text-slate-500 font-medium mt-1">
+                Maintain student, teacher, and administrator credentials and account status.
+            </p>
+        </div>
+        <a href="{{ url_for('admin.create_user') }}" class="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-xs shrink-0 font-heading">
+            + Create New Account
+        </a>
+    </div>
+
+    <!-- Role Filter Pills -->
+    <div class="flex items-center gap-2">
+        <a href="{{ url_for('admin.users') }}" class="px-3 py-1.5 rounded-xl text-xs font-bold border {% if not selected_role %}bg-slate-900 text-white border-slate-900{% else %}bg-white text-slate-700 border-slate-200{% endif %}">
+            All Users ({{ users|length }})
+        </a>
+        <a href="{{ url_for('admin.users', role='student') }}" class="px-3 py-1.5 rounded-xl text-xs font-bold border {% if selected_role == 'student' %}bg-slate-900 text-white border-slate-900{% else %}bg-white text-slate-700 border-slate-200{% endif %}">
+            Students Only
+        </a>
+        <a href="{{ url_for('admin.users', role='teacher') }}" class="px-3 py-1.5 rounded-xl text-xs font-bold border {% if selected_role == 'teacher' %}bg-slate-900 text-white border-slate-900{% else %}bg-white text-slate-700 border-slate-200{% endif %}">
+            Teachers Only
+        </a>
+        <a href="{{ url_for('admin.users', role='admin') }}" class="px-3 py-1.5 rounded-xl text-xs font-bold border {% if selected_role == 'admin' %}bg-slate-900 text-white border-slate-900{% else %}bg-white text-slate-700 border-slate-200{% endif %}">
+            Administrators
+        </a>
+    </div>
+
+    <!-- Users Table -->
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-700">
+                <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                    <tr>
+                        <th class="p-3.5">Name & Email</th>
+                        <th class="p-3.5">Role</th>
+                        <th class="p-3.5">Assigned Class</th>
+                        <th class="p-3.5">Phone</th>
+                        <th class="p-3.5">Status</th>
+                        <th class="p-3.5">Created On</th>
+                        <th class="p-3.5 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    {% for u in users %}
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3.5">
+                                <div class="font-bold text-slate-900">{{ u.full_name }}</div>
+                                <div class="text-[11px] text-slate-400">{{ u.email }}</div>
+                            </td>
+                            <td class="p-3.5">
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase {% if u.is_admin %}bg-purple-100 text-purple-800{% elif u.is_teacher %}bg-blue-100 text-blue-800{% else %}bg-emerald-100 text-emerald-800{% endif %}">
+                                    {{ u.role }}
+                                </span>
+                            </td>
+                            <td class="p-3.5 text-slate-600">
+                                {{ u.assigned_class.name if u.assigned_class else '—' }}
+                            </td>
+                            <td class="p-3.5 text-slate-500">{{ u.phone or '—' }}</td>
+                            <td class="p-3.5">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {% if u.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                    {% if u.is_active %}Active{% else %}Deactivated{% endif %}
+                                </span>
+                            </td>
+                            <td class="p-3.5 text-slate-400">{{ u.created_at.strftime('%d %b %Y') }}</td>
+                            <td class="p-3.5 text-right">
+                                {% if u.id != current_user.id %}
+                                    <form method="POST" action="{{ url_for('admin.toggle_user_status', user_id=u.id) }}" class="inline">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="px-2.5 py-1 rounded-lg text-[10px] font-bold {% if u.is_active %}bg-amber-100 text-amber-900 hover:bg-amber-200{% else %}bg-emerald-100 text-emerald-900 hover:bg-emerald-200{% endif %}">
+                                            {% if u.is_active %}Deactivate{% else %}Activate{% endif %}
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-[10px] text-slate-400 italic">Current User</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

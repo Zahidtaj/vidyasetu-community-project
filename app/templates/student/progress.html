@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}{{ t('progress') }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <div>
+        <h1 class="text-3xl font-black font-heading text-slate-900">
+            {{ t('progress') }} & Assessment History
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+            Track your chapter completion milestones and review past quiz attempts.
+        </p>
+    </div>
+
+    <!-- Subject Completion Progress Bars -->
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 sm:p-8 shadow-xs space-y-6">
+        <h2 class="text-xl font-black font-heading text-slate-900 flex items-center gap-2">
+            <span>📊</span>
+            <span>Subject-wise Syllabus Progress</span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for sp in subject_progress %}
+                <div class="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/80 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-bold">
+                        <span class="text-slate-900 font-heading text-sm">{{ sp.subject.name }} ({{ sp.subject.name_kn }})</span>
+                        <span class="text-orange-600">{{ sp.completed_chapters }} / {{ sp.total_chapters }} Chapters ({{ sp.percentage }}%)</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                        <div class="bg-gradient-to-r from-orange-500 to-amber-500 h-full rounded-full transition-all duration-500" style="width: {{ sp.percentage }}%"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Quiz Attempts History Table -->
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 sm:p-8 shadow-xs space-y-6">
+        <h2 class="text-xl font-black font-heading text-slate-900 flex items-center gap-2">
+            <span>📝</span>
+            <span>Quiz Attempts & Scorecard</span>
+        </h2>
+
+        {% if not quiz_attempts %}
+            <div class="p-8 text-center text-slate-500 text-xs bg-slate-50 rounded-2xl border border-slate-200">
+                You have not attempted any quizzes yet. <a href="{{ url_for('quiz.list_quizzes') }}" class="text-orange-600 font-bold hover:underline">Explore Quizzes</a>
+            </div>
+        {% else %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-700">
+                    <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                        <tr>
+                            <th class="p-3.5 rounded-l-xl">Quiz Title</th>
+                            <th class="p-3.5">Subject</th>
+                            <th class="p-3.5">Date</th>
+                            <th class="p-3.5">Score</th>
+                            <th class="p-3.5">Percentage</th>
+                            <th class="p-3.5 rounded-r-xl text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                        {% for a in quiz_attempts %}
+                            <tr class="hover:bg-amber-50/40 transition-colors">
+                                <td class="p-3.5 font-bold text-slate-900">{{ a.quiz.title }}</td>
+                                <td class="p-3.5">{{ a.quiz.subject.name }}</td>
+                                <td class="p-3.5 text-slate-500">{{ a.completed_at.strftime('%d %b %Y, %I:%M %p') if a.completed_at else 'Incomplete' }}</td>
+                                <td class="p-3.5 font-bold text-slate-900">{{ a.score }} / {{ a.max_score }}</td>
+                                <td class="p-3.5">
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-black {% if a.percentage >= 75 %}bg-emerald-100 text-emerald-800{% elif a.percentage >= 40 %}bg-amber-100 text-amber-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ a.percentage }}%
+                                    </span>
+                                </td>
+                                <td class="p-3.5 text-right">
+                                    <a href="{{ url_for('quiz.view_result', attempt_id=a.id) }}" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-orange-600 text-white font-bold text-[11px] transition-colors">
+                                        Review Answers
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

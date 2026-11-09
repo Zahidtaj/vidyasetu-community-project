@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}500 Server Error — VidyaSetu{% endblock %}
+{% block content %}
+<div class="text-center py-20 px-4">
+    <div class="w-16 h-16 rounded-3xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4 text-2xl font-black">
+        ⚡
+    </div>
+    <h1 class="text-3xl font-black font-heading text-slate-900 mb-2">500 — Server Encountered an Error</h1>
+    <p class="text-slate-600 max-w-md mx-auto mb-6 text-sm">
+        An unexpected error occurred while processing your request. The transaction has been safely rolled back.
+    </p>
+    <a href="{{ url_for('root') }}" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs shadow-xs">
+        Return to Safety
+    </a>
+</div>
+{% endblock %}

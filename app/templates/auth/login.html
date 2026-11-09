@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ t('login') }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto my-8">
+    
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 shadow-xl shadow-amber-500/5 p-8 relative overflow-hidden">
+        
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white mx-auto mb-3 shadow-md shadow-orange-500/20">
+                <svg class="w-7 h-7 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-black font-heading text-slate-900">
+                {{ t('login') }}
+            </h1>
+            <p class="text-xs text-slate-500 font-medium mt-1">
+                {{ t('platform_subtitle') }}
+            </p>
+        </div>
+
+        <!-- Login Form with CSRF -->
+        <form method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}" class="space-y-4">
+            {{ form.hidden_tag() }}
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    {{ t('email') }}
+                </label>
+                {{ form.email(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 text-sm font-medium", placeholder="e.g. student@school.demo", id="login-email") }}
+                {% if form.email.errors %}
+                    <p class="text-xs text-red-600 mt-1 font-semibold">{{ form.email.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    {{ t('password') }}
+                </label>
+                {{ form.password(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100 text-sm font-medium", placeholder="••••••••", id="login-password") }}
+                {% if form.password.errors %}
+                    <p class="text-xs text-red-600 mt-1 font-semibold">{{ form.password.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <div class="flex items-center justify-between text-xs">
+                <label class="flex items-center gap-2 cursor-pointer text-slate-600 font-medium">
+                    {{ form.remember_me(class="rounded border-slate-300 text-orange-600 focus:ring-orange-500") }}
+                    <span>{{ t('remember_me') }}</span>
+                </label>
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black text-sm shadow-md shadow-orange-500/25 transition-all hover:scale-101 cursor-pointer font-heading">
+                {{ t('login') }}
+            </button>
+        </form>
+
+        <!-- Quick Demonstration Logins for VTU Project Evaluator -->
+        <div class="mt-8 pt-6 border-t border-slate-100">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    Demo Credentials (1-Click Fill):
+                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                    Pre-seeded
+                </span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+                <button type="button" onclick="fillDemo('student@school.demo', 'Student@123')" class="px-2 py-2 rounded-xl bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 text-[11px] font-bold text-slate-700 border border-slate-200 transition-colors text-center">
+                    🎒 Student
+                </button>
+                <button type="button" onclick="fillDemo('teacher@school.demo', 'Teacher@123')" class="px-2 py-2 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-blue-800 text-[11px] font-bold text-slate-700 border border-slate-200 transition-colors text-center">
+                    👩‍🏫 Teacher
+                </button>
+                <button type="button" onclick="fillDemo('admin@school.demo', 'Admin@123')" class="px-2 py-2 rounded-xl bg-slate-100 hover:bg-purple-50 hover:text-purple-800 text-[11px] font-bold text-slate-700 border border-slate-200 transition-colors text-center">
+                    🛡️ Admin
+                </button>
+            </div>
+            <p class="text-[10px] text-slate-400 text-center mt-2">
+                Click any role above to automatically fill the login form for testing.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+function fillDemo(email, pass) {
+    document.getElementById('login-email').value = email;
+    document.getElementById('login-password').value = pass;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}System Audit Logs — Administrator{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <div class="pb-3 border-b border-amber-200">
+        <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900">
+            System Audit & Activity Logs
+        </h1>
+        <p class="text-xs text-slate-500 font-medium mt-1">
+            Tamper-resistant audit record tracking user logins, resource submissions, approvals, and quiz attempts.
+        </p>
+    </div>
+
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-700">
+                <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                    <tr>
+                        <th class="p-3.5">Timestamp</th>
+                        <th class="p-3.5">User</th>
+                        <th class="p-3.5">Action</th>
+                        <th class="p-3.5">Details</th>
+                        <th class="p-3.5 text-right">IP Address</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    {% for log in logs %}
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3.5 text-slate-500 font-mono text-[11px] whitespace-nowrap">
+                                {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                            </td>
+                            <td class="p-3.5 font-bold text-slate-900">
+                                {% if log.user %}
+                                    {{ log.user.full_name }} ({{ log.user.role }})
+                                {% else %}
+                                    <span class="text-slate-400 italic">System / Anonymous</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-3.5">
+                                <span class="px-2 py-0.5 rounded-md font-mono text-[10px] font-bold bg-slate-100 text-slate-800">
+                                    {{ log.action }}
+                                </span>
+                            </td>
+                            <td class="p-3.5 text-slate-600 text-xs">
+                                {{ log.details or '—' }}
+                            </td>
+                            <td class="p-3.5 text-right text-slate-400 font-mono text-[11px]">
+                                {{ log.ip_address or '127.0.0.1' }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

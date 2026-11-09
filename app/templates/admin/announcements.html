@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}School Announcements — Administrator{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <div class="pb-3 border-b border-amber-200">
+        <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900">
+            Publish School Announcements
+        </h1>
+        <p class="text-xs text-slate-500 font-medium mt-1">
+            Broadcast examination dates, state board notifications, book drive events, and holiday notices.
+        </p>
+    </div>
+
+    <!-- Announcement Form -->
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 sm:p-8 shadow-xs max-w-2xl">
+        <h2 class="text-lg font-black font-heading text-slate-900 mb-4 flex items-center gap-2">
+            <span>📢</span>
+            <span>New Announcement</span>
+        </h2>
+
+        <form method="POST" action="{{ url_for('admin.announcements') }}" class="space-y-4">
+            {{ form.hidden_tag() }}
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Title (English) *
+                    </label>
+                    {{ form.title(class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-orange-500", placeholder="e.g. Mid-Term Examination Timetable") }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Title in Kannada (ಕನ್ನಡ ಶೀರ್ಷಿಕೆ)
+                    </label>
+                    {{ form.title_kn(class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium font-kannada", placeholder="ಉದಾ: ಮಧ್ಯವಾರ್ಷಿಕ ಪರೀಕ್ಷಾ ವೇಳಾಪಟ್ಟಿ") }}
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Announcement Message (English) *
+                </label>
+                {{ form.message(class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium resize-none", rows="3", placeholder="Details regarding syllabus, dates, or guidelines...") }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Message in Kannada (ಕನ್ನಡ ಸಂದೇಶ)
+                </label>
+                {{ form.message_kn(class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium font-kannada resize-none", rows="3", placeholder="ಪರೀಕ್ಷೆ ಅಥವಾ ಮಾರ್ಗಸೂಚಿಗಳ ವಿವರ...") }}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Visible To
+                    </label>
+                    {{ form.target_role(class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white") }}
+                </div>
+                <div class="pt-4">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+                        {{ form.is_active(class="rounded border-slate-300 text-orange-600 focus:ring-orange-500") }}
+                        <span>Active / Visible on Dashboard</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-md font-heading">
+                Publish Announcement
+            </button>
+        </form>
+    </div>
+
+    <!-- Existing Announcements List -->
+    <div class="space-y-4">
+        <h2 class="text-lg font-black font-heading text-slate-900">
+            Published Announcements History
+        </h2>
+
+        <div class="space-y-3">
+            {% for a in announcements %}
+                <div class="bg-white rounded-2xl border border-amber-200/80 p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 uppercase">
+                                {{ a.target_role }}
+                            </span>
+                            <span class="text-xs text-slate-400">
+                                {{ a.created_at.strftime('%d %b %Y, %I:%M %p') }}
+                            </span>
+                        </div>
+                        <h4 class="text-base font-black font-heading text-slate-900">{{ a.title }}</h4>
+                        {% if a.title_kn %}
+                            <p class="text-xs text-orange-700 font-kannada font-bold">{{ a.title_kn }}</p>
+                        {% endif %}
+                        <p class="text-xs text-slate-600 leading-relaxed max-w-3xl">{{ a.message }}</p>
+                    </div>
+
+                    <div class="shrink-0">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold {% if a.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-100 text-slate-600{% endif %}">
+                            {% if a.is_active %}Published{% else %}Archived{% endif %}
+                        </span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

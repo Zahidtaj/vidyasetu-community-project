@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Start Quiz: {{ quiz.title }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto my-6 space-y-6">
+
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 sm:p-8 shadow-md">
+        
+        <div class="flex items-center gap-2 mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-slate-900 text-white uppercase">
+                {{ quiz.class_level.name }}
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-800">
+                {{ quiz.subject.name }}
+            </span>
+            {% if quiz.chapter %}
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                    Ch {{ quiz.chapter.chapter_number }}
+                </span>
+            {% endif %}
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900 leading-tight mb-2">
+            {% if current_lang == 'kn' and quiz.title_kn %}{{ quiz.title_kn }}{% else %}{{ quiz.title }}{% endif %}
+        </h1>
+
+        <div class="grid grid-cols-3 gap-3 my-6 p-4 rounded-2xl bg-amber-50/60 border border-amber-200 text-center">
+            <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Questions</span>
+                <div class="text-xl font-black text-slate-900 font-heading">{{ quiz.questions.count() }}</div>
+            </div>
+            <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Duration</span>
+                <div class="text-xl font-black text-orange-600 font-heading">{{ quiz.duration_minutes }} Mins</div>
+            </div>
+            <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Marks</span>
+                <div class="text-xl font-black text-indigo-600 font-heading">{{ quiz.questions.count() }} Marks</div>
+            </div>
+        </div>
+
+        <div class="space-y-3 mb-8">
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Instructions for Student:
+            </h3>
+            <ul class="text-xs text-slate-600 space-y-2 list-disc list-inside leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                <li>This quiz contains multiple-choice questions (MCQs) with one correct answer each.</li>
+                <li>The countdown timer starts as soon as you press <strong>"Begin Quiz Attempt"</strong>.</li>
+                <li>Do not refresh or close your browser window during the attempt.</li>
+                <li>Your answers will be evaluated server-side upon clicking "Submit Answers".</li>
+                <li>Explanations and correct answers will be revealed on your scorecard after submission.</li>
+            </ul>
+        </div>
+
+        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+            <a href="{{ url_for('quiz.list_quizzes') }}" class="text-xs font-bold text-slate-500 hover:text-slate-700">
+                ← Back to Quizzes
+            </a>
+            <a href="{{ url_for('quiz.attempt_quiz', quiz_id=quiz.id) }}" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black text-sm shadow-md shadow-orange-500/25 transition-all hover:scale-102 font-heading">
+                Begin Quiz Attempt →
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Previous Attempts -->
+    {% if previous_attempts %}
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-2xs space-y-3">
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Your Previous Attempts on this Quiz:
+            </h3>
+            <div class="divide-y divide-slate-100 text-xs">
+                {% for pa in previous_attempts %}
+                    <div class="py-2.5 flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-slate-800">{{ pa.score }} / {{ pa.max_score }} ({{ pa.percentage }}%)</span>
+                            <span class="text-slate-400 text-[11px] block">{{ pa.completed_at.strftime('%d %b %Y, %I:%M %p') }}</span>
+                        </div>
+                        <a href="{{ url_for('quiz.view_result', attempt_id=pa.id) }}" class="text-xs font-bold text-orange-600 hover:underline">
+                            View Scorecard →
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

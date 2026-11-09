@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Chapter {{ chapter.chapter_number }}: {{ chapter.title }} — VidyaSetu{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs text-slate-500 font-semibold overflow-x-auto pb-1">
+        <a href="{{ url_for('library.index') }}" class="hover:text-orange-600">{{ t('library') }}</a>
+        <span>/</span>
+        <a href="{{ url_for('library.subject_detail', subject_id=chapter.subject_id) }}" class="hover:text-orange-600">{{ chapter.subject.name }}</a>
+        <span>/</span>
+        <span class="text-slate-800">Chapter {{ chapter.chapter_number }}</span>
+    </nav>
+
+    <!-- Chapter Header Card -->
+    <div class="bg-white rounded-3xl border-2 border-amber-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <span class="px-2.5 py-1 rounded-full text-xs font-black bg-slate-900 text-white uppercase">
+                    {{ chapter.subject.class_level.name }}
+                </span>
+                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-800">
+                    {{ chapter.subject.name }}
+                </span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-black font-heading text-slate-900 leading-tight">
+                Chapter {{ chapter.chapter_number }}: {{ chapter.title }}
+            </h1>
+            <p class="text-base text-slate-700 font-kannada font-bold mt-1">
+                {{ chapter.title_kn }}
+            </p>
+
+            {% if chapter.description %}
+                <p class="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl leading-relaxed">
+                    {{ chapter.description }}
+                </p>
+            {% endif %}
+        </div>
+
+        {% if current_user.is_authenticated and current_user.is_student %}
+            <div class="shrink-0">
+                <form method="POST" action="{{ url_for('library.toggle_chapter_complete', chapter_id=chapter.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="px-5 py-3 rounded-2xl font-bold text-xs shadow-xs font-heading flex items-center gap-2 transition-all {% if is_completed %}bg-emerald-600 hover:bg-emerald-700 text-white{% else %}bg-slate-100 hover:bg-emerald-50 text-slate-700 border border-slate-300{% endif %}">
+                        <span>{% if is_completed %}✓ Completed! Mark Incomplete{% else %}Mark Chapter as Completed ✓{% endif %}</span>
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Chapter Resources -->
+    <div class="space-y-4">
+        <h2 class="text-lg font-black font-heading text-slate-900 flex items-center gap-2">
+            <span>📚</span>
+            <span>Study Materials for this Chapter</span>
+        </h2>
+
+        {% if not resources %}
+            <div class="p-6 bg-white rounded-2xl border border-slate-200 text-slate-500 text-xs">
+                No materials uploaded for this chapter yet.
+            </div>
+        {% else %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for r in resources %}
+                    <div class="bg-white rounded-2xl border border-amber-200 p-4 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 uppercase mb-2 inline-block">
+                                {{ r.category.name }}
+                            </span>
+                            <h4 class="text-sm font-black font-heading text-slate-900 line-clamp-2 mb-1">
+                                {{ r.title }}
+                            </h4>
+                            <p class="text-xs text-slate-500 line-clamp-2 mb-3">
+                                {{ r.description }}
+                            </p>
+                        </div>
+                        <a href="{{ url_for('library.view_resource', resource_id=r.id) }}" class="text-xs font-bold text-orange-600 hover:text-orange-700">
+                            Open Resource →
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Chapter Quizzes -->
+    {% if quizzes %}
+        <div class="space-y-4 pt-4 border-t border-amber-200">
+            <h2 class="text-lg font-black font-heading text-slate-900 flex items-center gap-2">
+                <span>📝</span>
+                <span>Chapter Quizzes & Self-Assessment</span>
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {% for q in quizzes %}
+                    <div class="bg-white rounded-2xl border-2 border-orange-200 p-5 shadow-2xs flex items-center justify-between">
+                        <div>
+                            <h4 class="text-sm font-black font-heading text-slate-900 mb-1">
+                                {{ q.title }}
+                            </h4>
+                            <p class="text-xs text-slate-500">
+                                ⏱️ {{ q.duration_minutes }} Mins • {{ q.questions.count() }} Questions
+                            </p>
+                        </div>
+                        <a href="{{ url_for('quiz.start_quiz', quiz_id=q.id) }}" class="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-xs">
+                            Start Quiz
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
